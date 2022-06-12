@@ -1,6 +1,3 @@
-from email.mime import image
-
-
 class Node:
     def __init__(self, imagen, flavor, links):
         self.imagen = imagen
