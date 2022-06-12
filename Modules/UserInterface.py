@@ -1,5 +1,5 @@
 
-class Orquestador:
+class UserInterface:
     def __init__(self):
         self.Menu=None
 
@@ -142,14 +142,14 @@ class Orquestador:
 
     @staticmethod
     def iniciar_programa():
-        o = Orquestador()
+        o = UserInterface()
         while True:
             print('*********************************')
             print('')
-            option = Orquestador.main_menu()
+            option = UserInterface.main_menu()
             try:
                 option = int(option)
-                Orquestador.validate_option(option)
+                UserInterface.validate_option(option)
 
                 if option == 1:
                     while True:
@@ -225,4 +225,4 @@ class Orquestador:
             except Exception as e:
                 print(e)
 
-Orquestador.iniciar_programa()
+UserInterface.iniciar_programa()
