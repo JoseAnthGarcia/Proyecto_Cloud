@@ -29,7 +29,6 @@ class Topology:
                 json_topology.append(json_nodo)
             k = k + 1
         return json_topology
-        pass
 
     def create_lineal_topology(self, nodos):
         i = 0
@@ -64,11 +63,11 @@ class Topology:
         return json_topology
         pass
 
-    def create_ring_topology(self, nodos):
+    def create_ring_topology(self, start, nodos):
         i = 0
         array_nodos = []
         for i in range(nodos):
-            i = i + 1
+            i = i + 1 + start
             nodo = "n" + str(i)
             array_nodos.append(nodo)
         print(array_nodos)
@@ -100,8 +99,25 @@ class Topology:
     def create_malla_topology(self,filas,columnas):
         nodos = filas * columnas
 
-    def create_tree_topology(self, degree):
-        nodos = 2
+    def create_tree_topology(self,lastNumber, degree):
+        start = lastNumber + 1
+        N = degree
+        sub_grafo = {}
+        node = 0
+        for k in range(1, N+1):
+            nodes_cant = 2**(k-1)
+            for i in range(nodes_cant):
+                node_name = f"n{node+start}"
+                if k == N:
+                    enlaces = []
+                else:
+                    enlaces = [f"n{node*2+1+start}", f"n{node*2+2+start}"]
+                sub_grafo[node_name] = {"enlaces": enlaces}
+                # nodes.append({node_name:{"enlaces": enlaces}})
+                # print(f"Node: {node_name}")
+                # print(f"Enlaces: {enlaces}")
+                node += 1
+        return sub_grafo
 
 topo = Topology()
-print(topo.create_ring_topology(4))
+print(topo.create_ring_topology(5, 4))
