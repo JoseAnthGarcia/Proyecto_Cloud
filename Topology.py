@@ -2,33 +2,28 @@ class Topology:
     def __init__(self):
         pass
 
-    def create_start_topology(self, nodos):
+    def create_star_topology(self, nodos):
         i = 0
         array_nodos = []
         for i in range(nodos + 1):
             i = i + 1
             nodo = "n" + str(i)
             array_nodos.append(nodo)
-        print(array_nodos)
         j = 0
-        json_topology = []
+        sub_grafo = {}
         for k in range(nodos + 1):
             if k == 1:
                 nodos_enlaces = []
                 for i in range(nodos):
                     nodos_enlaces.append(array_nodos[i + 1])
                     i = i + 1
-                    nodo = {"enlaces": nodos_enlaces}
-                    json_nodo = {array_nodos[k - 1]: {"enlaces": nodos_enlaces}}
-                json_topology.append(json_nodo)
+                    sub_grafo[array_nodos[k - 1]] = {"enlaces": nodos_enlaces}
             else:
                 nodos_enlaces = []
                 nodos_enlaces.append(array_nodos[0])
-                nodo = {"enlaces": nodos_enlaces}
-                json_nodo = {array_nodos[k - 1]: {"enlaces": nodos_enlaces}}
-                json_topology.append(json_nodo)
+                sub_grafo[array_nodos[k - 1]] = {"enlaces": nodos_enlaces}
             k = k + 1
-        return json_topology
+        return sub_grafo
 
     def create_lineal_topology(self, nodos):
         i = 0
@@ -39,28 +34,24 @@ class Topology:
             array_nodos.append(nodo)
         print(array_nodos)
         j = 0
-        json_topology = []
+        sub_grafo = {}
         for k in range(nodos):
             print(k)
             if k == 0:
                 nodos_enlaces = []
                 nodos_enlaces.append(array_nodos[k + 1])
-                json_nodo = {array_nodos[k]: {"enlaces": nodos_enlaces}}
-                json_topology.append(json_nodo)
+                sub_grafo[array_nodos[k]] = {"enlaces": nodos_enlaces}
             elif k == nodos-1:
                 nodos_enlaces = []
                 nodos_enlaces.append(array_nodos[k - 1])
-                json_nodo = {array_nodos[k]: {"enlaces": nodos_enlaces}}
-                json_topology.append(json_nodo)
+                sub_grafo[array_nodos[k]] = {"enlaces": nodos_enlaces}
             else:
-                print(k)
                 nodos_enlaces = []
                 nodos_enlaces.append(array_nodos[k-1])
                 nodos_enlaces.append(array_nodos[k + 1])
-                json_nodo = {array_nodos[k]: {"enlaces": nodos_enlaces}}
-                json_topology.append(json_nodo)
+                sub_grafo[array_nodos[k]] = {"enlaces": nodos_enlaces}
             k = k + 1
-        return json_topology
+        return sub_grafo
         pass
 
     def create_ring_topology(self, nodos):
@@ -70,30 +61,26 @@ class Topology:
             i = i + 1
             nodo = "n" + str(i)
             array_nodos.append(nodo)
-        print(array_nodos)
         j = 0
-        json_topology = []
+        sub_grafo={}
         for k in range(nodos):
             if k == 0:
                 nodos_enlaces = []
                 nodos_enlaces.append(array_nodos[k + 1])
                 nodos_enlaces.append(array_nodos[nodos-1])
-                json_nodo = {array_nodos[k]: {"enlaces": nodos_enlaces}}
-                json_topology.append(json_nodo)
+                sub_grafo[array_nodos[k]] = {"enlaces": nodos_enlaces}
             elif k == nodos-1:
                 nodos_enlaces = []
                 nodos_enlaces.append(array_nodos[k - 1])
                 nodos_enlaces.append(array_nodos[0])
-                json_nodo = {array_nodos[k]: {"enlaces": nodos_enlaces}}
-                json_topology.append(json_nodo)
+                sub_grafo[array_nodos[k]] = {"enlaces": nodos_enlaces}
             else:
                 nodos_enlaces = []
                 nodos_enlaces.append(array_nodos[k-1])
                 nodos_enlaces.append(array_nodos[k + 1])
-                json_nodo = {array_nodos[k]: {"enlaces": nodos_enlaces}}
-                json_topology.append(json_nodo)
+                sub_grafo[array_nodos[k]] = {"enlaces": nodos_enlaces}
             k = k + 1
-        return json_topology
+        return sub_grafo
         pass
 
     def create_malla_topology(self,filas,columnas):
@@ -111,10 +98,8 @@ class Topology:
                 array_nodos.append(nodo)
                 array_parcial.append(nodo)
             array_total.append(array_parcial)
-        print(array_nodos)
-        print(array_total)
         k = 0
-        json_topology = []
+        sub_grafo = {}
         for k in range(filas):
             for j in range(columnas):
                 if k == 0:
@@ -123,42 +108,36 @@ class Topology:
                         nodos_enlaces = []
                         nodos_enlaces.append(array_total[k + 1][j])
                         nodos_enlaces.append(array_total[k][j+1])
-                        json_nodo = {array_total[k][j]: {"enlaces": nodos_enlaces}}
-                        json_topology.append(json_nodo)
+                        sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
                     elif j == columnas-1:
                         nodos_enlaces = []
                         nodos_enlaces.append(array_total[k + 1][j])
                         nodos_enlaces.append(array_total[k][j - 1])
-                        json_nodo = {array_total[k][j]: {"enlaces": nodos_enlaces}}
-                        json_topology.append(json_nodo)
+                        sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
                     else:
                         nodos_enlaces = []
                         nodos_enlaces.append(array_total[k + 1][j])
                         nodos_enlaces.append(array_total[k][j - 1])
                         nodos_enlaces.append(array_total[k][j + 1])
-                        json_nodo = {array_total[k][j]: {"enlaces": nodos_enlaces}}
-                        json_topology.append(json_nodo)
+                        sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
                 elif k==filas-1:
                     # ultima fila
                     if j == 0:
                         nodos_enlaces = []
                         nodos_enlaces.append(array_total[k - 1][j])
                         nodos_enlaces.append(array_total[k][j + 1])
-                        json_nodo = {array_total[k][j]: {"enlaces": nodos_enlaces}}
-                        json_topology.append(json_nodo)
+                        sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
                     elif j == columnas - 1:
                         nodos_enlaces = []
                         nodos_enlaces.append(array_total[k - 1][j])
                         nodos_enlaces.append(array_total[k][j - 1])
-                        json_nodo = {array_total[k][j]: {"enlaces": nodos_enlaces}}
-                        json_topology.append(json_nodo)
+                        sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
                     else:
                         nodos_enlaces = []
                         nodos_enlaces.append(array_total[k - 1][j])
                         nodos_enlaces.append(array_total[k][j - 1])
                         nodos_enlaces.append(array_total[k][j + 1])
-                        json_nodo = {array_total[k][j]: {"enlaces": nodos_enlaces}}
-                        json_topology.append(json_nodo)
+                        sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
                 else:
                     # filas intermedias
                     if j == 0:
@@ -166,25 +145,22 @@ class Topology:
                         nodos_enlaces.append(array_total[k + 1][j])
                         nodos_enlaces.append(array_total[k - 1][j])
                         nodos_enlaces.append(array_total[k][j + 1])
-                        json_nodo = {array_total[k][j]: {"enlaces": nodos_enlaces}}
-                        json_topology.append(json_nodo)
+                        sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
                     elif j == columnas - 1:
                         print(k)
                         nodos_enlaces = []
                         nodos_enlaces.append(array_total[k + 1][j])
                         nodos_enlaces.append(array_total[k - 1][j])
                         nodos_enlaces.append(array_total[k][j - 1])
-                        json_nodo = {array_total[k][j]: {"enlaces": nodos_enlaces}}
-                        json_topology.append(json_nodo)
+                        sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
                     else:
                         nodos_enlaces = []
                         nodos_enlaces.append(array_total[k + 1][j])
                         nodos_enlaces.append(array_total[k - 1][j])
                         nodos_enlaces.append(array_total[k][j - 1])
                         nodos_enlaces.append(array_total[k][j + 1])
-                        json_nodo = {array_total[k][j]: {"enlaces": nodos_enlaces}}
-                        json_topology.append(json_nodo)
-        return json_topology
+                        sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
+        return sub_grafo
         pass
 
 
@@ -209,4 +185,4 @@ class Topology:
         return sub_grafo
 
 topo = Topology()
-print(topo.create_ring_topology(4))
+print(topo.create_malla_topology(3,3))
