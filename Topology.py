@@ -187,7 +187,6 @@ class Topology:
         return json_topology
         pass
 
-
     def create_tree_topology(self,lastNumber, degree):
         start = lastNumber + 1
         N = degree
@@ -209,4 +208,3 @@ class Topology:
         return sub_grafo
 
 topo = Topology()
-print(topo.create_ring_topology(4))
