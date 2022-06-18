@@ -38,7 +38,6 @@ class Topology:
         j = 0
         sub_grafo = {}
         for k in range(nodos):
-            print(k)
             if k == 0:
                 nodos_enlaces = []
                 nodos_enlaces.append(array_nodos[k + 1])
@@ -153,7 +152,6 @@ class Topology:
                         nodos_enlaces.append(array_total[k][j + 1])
                         sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
                     elif j == columnas - 1:
-                        print(k)
                         nodos_enlaces = []
                         nodos_enlaces.append(array_total[k + 1][j])
                         nodos_enlaces.append(array_total[k - 1][j])
@@ -191,5 +189,3 @@ class Topology:
         last_node = node+start-1
         return sub_grafo, last_node
 
-topo = Topology()
-print(topo.create_malla_topology(2,4,3))

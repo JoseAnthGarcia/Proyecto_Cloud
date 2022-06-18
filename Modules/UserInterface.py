@@ -159,11 +159,27 @@ class UserInterface:
             index += 1
         topo_type = input('Opción: ')
         if topo_type == "1":
-            # TODO: printear ingreso de valor segun sea el tipo
-            pass
+            nodo = int(input("Ingrese el número de nodos: "))
+            sub_grafo, last_node = topology.create_lineal_topology(prox_node, nodo)
+        elif topo_type == "2":
+            nodo = int(input("Ingrese el número de filas y columnas con el formato '3-3': "))
+            formato = nodo.split("-")
+            sub_grafo, last_node = topology.create_malla_topology(prox_node, formato[0],formato[1])
         elif topo_type == "3":
-            nivel = int(input("Ingrese el numeros de niveles: "))
+            nivel = int(input("Ingrese el número de niveles: "))
             sub_grafo, last_node = topology.create_tree_topology(prox_node, nivel)
+        elif topo_type == "4":
+            nodo = int(input("Ingrese el número de nodos: "))
+            sub_grafo, last_node = topology.create_ring_topology(prox_node, nodo)
+        elif topo_type == "5":
+            #BUS
+            nivel = int(input("Ingrese el número de niveles: "))
+            sub_grafo, last_node = topology.create_tree_topology(prox_node, nivel)
+        elif topo_type == "6":
+            nodo = int(input("Ingrese el número de nodos que irán alrededor del nodo principal: "))
+            sub_grafo, last_node = topology.create_tree_topology(prox_node, nodo)
+        else:
+            print("Opción no válida")
         prox_node = last_node+1
         slice["nodos"].update(sub_grafo) # Agrega los nuevos valores de sub_grafo al diccionario slice.
         print(f"* Subgrafo del tipo {sub_topologies[int(topo_type)-1]} agregado.")
