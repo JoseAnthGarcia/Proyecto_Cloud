@@ -1,4 +1,6 @@
 from Topology import *
+import json
+import os
 class UserInterface:
     def __init__(self):
         self.Menu=None
@@ -168,6 +170,29 @@ class UserInterface:
         return slice, prox_node
 
     @staticmethod
+    def save_changes(slice, from_scratch):
+        if from_scratch:
+            print("1. Guardar borrador")
+            print("2. Implementar slice")
+            print("Escriba 'exit' para salir del menú")
+            opt = input("Opcion: ")
+            if opt == "1" or opt == "2":
+                if opt == "1":
+                    f = open(f"./Modules/Slices/{slice['nombre']}.json", "w")
+                    f.write(json.dumps(slice))
+                    f.close()
+                    print(f"* Slice {slice['nombre']} guardado.")
+                elif opt == "2":
+                    # TODO
+                    pass
+        else:
+            f = open(f"./Modules/Slices/{slice['nombre']}.json", "w")
+            f.write(json.dumps(slice))
+            f.close()
+            print("* Cambios guardados e implementando slice ...")
+            # TODO
+
+    @staticmethod
     def validate_option(option):
         if not((option > 0) and (option < 100)):
             raise Exception('Invalid option')
@@ -197,13 +222,24 @@ class UserInterface:
                         elif int(config_mode) == 1 or int(config_mode) == 2:
                             slice = {"nodos":{}}
                             prox_node = 0
+                            from_scratch = False #TODO: Cambiar a si esta implementado o no
                             if int(config_mode) == 1:
                                 slice_name = input("Nombre del slice: ")
                                 slice["nombre"] = slice_name
                                 print(f"* Slice {slice_name} creado.")
+                                from_scratch = True # Es verdadero si se inicia desde cero la creacion del slice
                             else:
-                                #TODO: Listar los slices creados anteriormente
-                                pass
+                                files = os.listdir('./Modules/Slices')
+                                i = 0
+                                for file_name in files:
+                                    print(f"{i+1}. {file_name[:-5]}")
+                                    i += 1
+                                slice_opt = input("Seleccionar slice: ")
+                                file_name = files[int(slice_opt)-1]
+                                f = open(f"./Modules/Slices/{file_name}", "r")
+                                slice = json.loads(f.read())
+                                prox_node = slice["ultimo_nodo"]+1
+                                f.close()
                             while True:
                                 opt =  o.def_config_slice()
                                 if opt == "exit":
@@ -251,6 +287,8 @@ class UserInterface:
                                 elif int(opt) == 6:
                                     pass
                                 elif int(opt) == 7:
+                                    slice["ultimo_nodo"] = prox_node-1
+                                    o.save_changes(slice, from_scratch)
                                     pass
                                 elif int(opt) == 8:
                                     print(slice)

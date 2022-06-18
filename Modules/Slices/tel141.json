@@ -1,0 +1,1 @@
+{"nodos": {"n0": {"enlaces": ["n2"]}, "n1": {"enlaces": ["n2"]}, "n2": {"enlaces": ["n0", "n1"]}, "n3": {"enlaces": []}}, "nombre": "tel141", "ultimo_nodo": 3}
