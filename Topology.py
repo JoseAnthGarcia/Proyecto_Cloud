@@ -2,12 +2,13 @@ class Topology:
     def __init__(self):
         pass
 
-    def create_star_topology(self, nodos):
+    def create_star_topology(self,prox_node, nodos):
         i = 0
+        start = prox_node
         array_nodos = []
         for i in range(nodos + 1):
             i = i + 1
-            nodo = "n" + str(i)
+            nodo = "n" + str(i+start)
             array_nodos.append(nodo)
         j = 0
         sub_grafo = {}
@@ -15,7 +16,7 @@ class Topology:
             if k == 1:
                 nodos_enlaces = []
                 for i in range(nodos):
-                    nodos_enlaces.append(array_nodos[i + 1])
+                    nodos_enlaces.append(array_nodos[i+ 1])
                     i = i + 1
                     sub_grafo[array_nodos[k - 1]] = {"enlaces": nodos_enlaces}
             else:
@@ -23,16 +24,17 @@ class Topology:
                 nodos_enlaces.append(array_nodos[0])
                 sub_grafo[array_nodos[k - 1]] = {"enlaces": nodos_enlaces}
             k = k + 1
-        return sub_grafo
+        last_node = len(array_nodos) + start
+        return sub_grafo,last_node
 
-    def create_lineal_topology(self, nodos):
+    def create_lineal_topology(self,prox_node, nodos):
         i = 0
         array_nodos = []
+        start = prox_node
         for i in range(nodos):
             i = i + 1
-            nodo = "n" + str(i)
+            nodo = "n" + str(i+start)
             array_nodos.append(nodo)
-        print(array_nodos)
         j = 0
         sub_grafo = {}
         for k in range(nodos):
@@ -51,15 +53,17 @@ class Topology:
                 nodos_enlaces.append(array_nodos[k + 1])
                 sub_grafo[array_nodos[k]] = {"enlaces": nodos_enlaces}
             k = k + 1
-        return sub_grafo
+        last_node = len(array_nodos) + start
+        return sub_grafo,last_node
         pass
 
-    def create_ring_topology(self, nodos):
+    def create_ring_topology(self,prox_node, nodos):
         i = 0
+        start = prox_node
         array_nodos = []
         for i in range(nodos):
             i = i + 1
-            nodo = "n" + str(i)
+            nodo = "n" + str(i+start)
             array_nodos.append(nodo)
         j = 0
         sub_grafo={}
@@ -80,21 +84,23 @@ class Topology:
                 nodos_enlaces.append(array_nodos[k + 1])
                 sub_grafo[array_nodos[k]] = {"enlaces": nodos_enlaces}
             k = k + 1
-        return sub_grafo
+        last_node = len(array_nodos) + start
+        return sub_grafo,last_node
         pass
 
-    def create_malla_topology(self,filas,columnas):
+    def create_malla_topology(self,prox_node,filas,columnas):
         nodos = filas * columnas
         i = 0
         array_nodos = []
+        start = prox_node
         array_total=[]
         for i in range(filas):
             i = i + 1
             array_parcial = []
             for j in range(columnas):
                 j=j+1
-                nodo = "n" + str(i)
-                nodo = nodo + str(j)
+                nodo = "n" + str(i+start)
+                nodo = nodo + str(j+start)
                 array_nodos.append(nodo)
                 array_parcial.append(nodo)
             array_total.append(array_parcial)
@@ -160,7 +166,8 @@ class Topology:
                         nodos_enlaces.append(array_total[k][j - 1])
                         nodos_enlaces.append(array_total[k][j + 1])
                         sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
-        return sub_grafo
+        last_node = len(array_total) + start +1
+        return sub_grafo,last_node
         pass
 
     def create_tree_topology(self,prox_node, degree):
@@ -183,3 +190,6 @@ class Topology:
                 node += 1
         last_node = node+start-1
         return sub_grafo, last_node
+
+topo = Topology()
+print(topo.create_malla_topology(2,4,3))
