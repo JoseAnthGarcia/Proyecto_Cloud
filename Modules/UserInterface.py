@@ -144,25 +144,28 @@ class UserInterface:
         return input('Opción: ')
 
     @staticmethod
-    def draw_subgrafo(last_node_number):
+    def draw_subgrafo(slice, prox_node):
+        # Metodo que recibe el slice actual (slice) y el nodo por el cual empezara el subgrafo (prox_node)
+        # Devuelve el nuevo slice y valor del proximo valor nodo a utilizar
         topology = Topology()
+        sub_topologies = ["lineal", "malla", "árbol", "anillo", "bus", "estrella"]
         print("Escoja la topología del subgrafo que desea agregar:")
-        print("a. lineal")
-        print("b. malla")
-        print("c. árbol")
-        print("d. anillo")
-        print("e. bus")
-        print("f. estrella")
+        index = 0
+        sub_grafo, last_node = None, None
+        for sub_topology_name in sub_topologies:
+            print(f"{index+1}. {sub_topology_name}")
+            index += 1
         topo_type = input('Opción: ')
-        if topo_type == "a":
+        if topo_type == "1":
             # TODO: printear ingreso de valor segun sea el tipo
             pass
-        elif topo_type == "c":
-            nivel = int(input("Ingrese el numeros de niveles:"))
-            subtopology = topology.create_tree_topology(last_node_number, nivel)
-            print(subtopology)
-
-
+        elif topo_type == "3":
+            nivel = int(input("Ingrese el numeros de niveles: "))
+            sub_grafo, last_node = topology.create_tree_topology(prox_node, nivel)
+        prox_node = last_node+1
+        slice["nodos"].update(sub_grafo) # Agrega los nuevos valores de sub_grafo al diccionario slice.
+        print(f"* Subgrafo del tipo {sub_topologies[int(topo_type)-1]} agregado.")
+        return slice, prox_node
 
     @staticmethod
     def validate_option(option):
@@ -193,7 +196,7 @@ class UserInterface:
                             break
                         elif int(config_mode) == 1 or int(config_mode) == 2:
                             slice = {"nodos":{}}
-                            number = 0
+                            prox_node = 0
                             if int(config_mode) == 1:
                                 slice_name = input("Nombre del slice: ")
                                 slice["nombre"] = slice_name
@@ -206,12 +209,14 @@ class UserInterface:
                                 if opt == "exit":
                                     break
                                 elif int(opt) == 1:
-                                    slice["nodos"][f"n{number}"] = {"enlaces":[]}
-                                    print(f"* Nodo n{number} agregado.")
-                                    number += 1
+                                    slice["nodos"][f"n{prox_node}"] = {"enlaces":[]}
+                                    print(f"* Nodo n{prox_node} agregado.")
+                                    prox_node += 1
                                     pass
                                 elif int(opt) == 2:
-                                    o.draw_subgrafo(number)
+                                    new_slice, new_prox_node = o.draw_subgrafo(slice, prox_node)
+                                    slice = new_slice
+                                    prox_node = new_prox_node
                                 elif int(opt) == 3:
                                     while True:
                                         nodos_dict = slice["nodos"]
