@@ -283,7 +283,35 @@ class UserInterface:
                                     print(f"* Nodo {node_opt} borrado del slice {slice['nombre']}.")
                                     
                                 elif int(opt) == 5:
-                                    pass
+                                    nodos_dict = slice["nodos"]
+                                    print(f"- {nodos_dict}")
+                                    i = 1
+                                    enlaces_repe=[]
+                                    for nodo_origin in nodos_dict:
+                                        enlaces_dict=nodos_dict.get(nodo_origin)
+                                        for enlaces_array in enlaces_dict.values():
+                                            for nodo_enlace in enlaces_array:
+                                                if len(enlaces_repe) >0:
+                                                    enlace_par=nodo_origin+"-"+nodo_enlace
+                                                    if (enlace_par in enlaces_repe):
+                                                        print("")
+                                                    else:
+                                                       print(f"*{nodo_origin}-{nodo_enlace}")
+                                                else:
+                                                    print(f"*{nodo_origin}-{nodo_enlace}")
+                                                enlace = nodo_origin+"-"+nodo_enlace
+                                                enlace_inv = nodo_enlace + "-" + nodo_origin
+                                                enlaces_repe.append(enlace)
+                                                enlaces_repe.append(enlace_inv)
+                                        i += 1
+                                    enlace_opt = input("Indicar enlace que desea borrar en formato 'n1-n2', escriba 'exit' para terminar: ")
+                                    if enlace_opt == "exit":
+                                        break
+                                    else:
+                                        nodos = enlace_opt.split("-")
+                                        slice["nodos"][nodos[0]]["enlaces"].remove(nodos[1])
+                                        slice["nodos"][nodos[1]]["enlaces"].remove(nodos[0])
+                                        print(f"* Enlace {enlace_opt}borrado.")
                                 elif int(opt) == 6:
                                     pass
                                 elif int(opt) == 7:
