@@ -163,8 +163,8 @@ class Topology:
         return sub_grafo
         pass
 
-    def create_tree_topology(self,lastNumber, degree):
-        start = lastNumber + 1
+    def create_tree_topology(self,prox_node, degree):
+        start = prox_node
         N = degree
         sub_grafo = {}
         node = 0
@@ -181,4 +181,5 @@ class Topology:
                 # print(f"Node: {node_name}")
                 # print(f"Enlaces: {enlaces}")
                 node += 1
-        return sub_grafo
+        last_node = node+start-1
+        return sub_grafo, last_node
