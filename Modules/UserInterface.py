@@ -131,6 +131,25 @@ class UserInterface:
         return input('Opción: ')
 
     @staticmethod
+    def def_conf_nodos1():
+        print('*********************************')
+        print('Seleccione:')
+        print('1. Configurar todos los nodos')
+        print('2. Configurar un nodo o una lista de nodos')
+        print("Escriba 'exit' para salir del menú")
+        return input('Opción: ')
+
+    @staticmethod
+    def def_conf_nodos2():
+        print('*********************************')
+        print('Seleccionar:')
+        print('1. Configuración con flavors')
+        print('2. Configuración con imágenes')
+        print('3. Configuración manual')
+        print("Escriba 'exit' para salir del menú")
+        return input('Opción: ')
+
+    @staticmethod
     def def_config_slice():
         print('*********************************')
         print('Seleccionar:')
@@ -329,7 +348,46 @@ class UserInterface:
                                         slice["nodos"][nodos[1]]["enlaces"].remove(nodos[0])
                                         print(f"* Enlace {enlace_opt}borrado.")
                                 elif int(opt) == 6:
-                                    pass
+                                    conf_nodos_mode = o.def_conf_nodos1()
+                                    if conf_nodos_mode == 'exit':
+                                        pass
+                                    elif int(conf_nodos_mode) == 1:
+                                        print("configurar todos los nodos")
+                                        nodos_dict = slice["nodos"]
+                                        nodos_lista = []
+                                        for node_name in nodos_dict.keys():
+                                            nodos_lista.append(node_name)
+                                        print(f"Configurará: {nodos_lista}")
+                                        o.def_conf_nodos2()
+                                    elif int(conf_nodos_mode) == 2:
+                                        nodos_dict = slice["nodos"]
+                                        i = 1
+                                        for node_name in nodos_dict.keys():
+                                            print(f"- {node_name}")
+                                            i += 1
+                                        enlace_opt = input("Indicar nodos que desea borrar en formato 'n1,n2,n3,etc', escriba 'exit' para terminar: ")
+                                        if enlace_opt == "exit":
+                                            break
+                                        else:
+                                            nodos = enlace_opt.split(",")
+                                            print(f"Configurará: {nodos}")
+                                            conf_nodos_mode2 = o.def_conf_nodos2()
+                                            if conf_nodos_mode == 'exit':
+                                                pass
+                                            elif int(conf_nodos_mode2) == 1:
+                                                print("Lista de flavors:")
+                                            elif int(conf_nodos_mode2) == 2:
+                                                print("Lista de imágenes:")
+                                            elif int(conf_nodos_mode2) == 3:
+                                                cpu = input("Indicar el # de CPUs:")
+                                                ram = input("Indicar la capacidad de la memoria RAM:")
+                                                disco = input("Indicar la capacidad de disco:")
+
+                                            else:
+                                                print("Opción no válida")
+
+
+
                                 elif int(opt) == 7:
                                     slice["ultimo_nodo"] = prox_node-1
                                     o.save_changes(slice, from_scratch)
