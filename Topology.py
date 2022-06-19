@@ -166,7 +166,6 @@ class Topology:
                         sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
         last_node = len(array_total) + start +1
         return sub_grafo,last_node
-        pass
 
     def create_tree_topology(self,prox_node, degree):
         start = prox_node
