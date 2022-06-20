@@ -99,7 +99,7 @@ class Topology:
             array_parcial = []
             for j in range(columnas):
                 j=j+1
-                nodo = "n" + str(i+start)
+                nodo = "Mn" + str(i+start)
                 nodo = nodo + str(j+start)
                 array_nodos.append(nodo)
                 array_parcial.append(nodo)
@@ -165,7 +165,7 @@ class Topology:
                         nodos_enlaces.append(array_total[k][j - 1])
                         nodos_enlaces.append(array_total[k][j + 1])
                         sub_grafo[array_total[k][j]] = {"enlaces": nodos_enlaces}
-        last_node = len(array_total) + start +1
+        last_node = len(array_nodos) + start
         return sub_grafo,last_node
 
     def create_tree_topology(self,prox_node, degree):
