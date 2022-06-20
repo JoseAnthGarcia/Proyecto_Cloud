@@ -218,8 +218,14 @@ class UserInterface:
                     f.close()
                     print(f"* Slice {slice['nombre']} guardado.")
                 elif opt == "2":
-                    # TODO
-                    pass
+                    lista_zonas=[["zona1","4 discos, 8GB RAM, 8 CPUs"],["zona2","4 discos, 8GB RAM, 8 CPUs"],["zona3","4 discos, 8GB RAM, 8 CPUs"]]
+                    print("Seleccionar zona de disponibilidad:")
+                    print("Lista de zonas:")
+                    for zona in lista_zonas:
+                        print(f"* {zona[0]}  Consumo usado: {zona[1]} ")
+                    opt = input("Opcion: ")
+                    slice["zona"] = {"nombre":opt}
+                    print(slice)
         else:
             f = open(f"./Modules/Slices/{slice['nombre']}.json", "w")
             f.write(json.dumps(slice))
@@ -485,7 +491,7 @@ class UserInterface:
                                 else:
                                     print("***********************************")
                                     print("Detalle del slice", slice_escogido, "en la zona ", nombre_zona_escogida)
-                                    print("RAM:   CPU:   #DISCO:  ")
+                                    print("RAM: 8GB   CPU: 4  #DISCO: 10GB ")
                                     print("***********************************")
                 elif option == 4:
                     nombre_zona = o.def_zona_disponibilidad_menu()
