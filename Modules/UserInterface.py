@@ -193,10 +193,10 @@ class UserInterface:
         elif topo_type == "5":
             #BUS
             nivel = int(input("Ingrese el número de niveles: "))
-            sub_grafo, last_node = topology.create_tree_topology(prox_node, nivel)
+            sub_grafo, last_node = topology.create_star_topology(prox_node, nivel)
         elif topo_type == "6":
             nodo = int(input("Ingrese el número de nodos que irán alrededor del nodo principal: "))
-            sub_grafo, last_node = topology.create_tree_topology(prox_node, nodo)
+            sub_grafo, last_node = topology.create_star_topology(prox_node, nodo)
         else:
             print("Opción no válida")
         prox_node = last_node+1
