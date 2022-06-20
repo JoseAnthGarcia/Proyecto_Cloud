@@ -181,16 +181,18 @@ class Topology:
                     enlaces = []
                 else:
                     enlaces = [f"n{node*2+1+start}", f"n{node*2+2+start}"]
+                if node != 0:
+                    if node%2==0:
+                        enlaces.append(f"n{int((node-2)/2)+start}")
+                    else:
+                        enlaces.append(f"n{int((node-1)/2)+start}")
                 sub_grafo[node_name] = {"enlaces": enlaces}
-                # nodes.append({node_name:{"enlaces": enlaces}})
-                # print(f"Node: {node_name}")
-                # print(f"Enlaces: {enlaces}")
                 node += 1
         last_node = node+start-1
         return sub_grafo, last_node
 
     def draw_topology(self, slice):
-        net = Network()
+        net = Network("100%","100%")
         nodos = slice["nodos"]
         nodos_listos = []
         for nodo_name in nodos:
