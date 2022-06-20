@@ -447,7 +447,8 @@ class UserInterface:
                                     o.save_changes(slice, from_scratch)
                                     pass
                                 elif int(opt) == 8:
-                                    print(slice)
+                                    topo = Topology()
+                                    topo.draw_topology(slice)
                         else:
                             print("* Opcion no valida.")
                             break

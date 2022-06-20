@@ -1,3 +1,4 @@
+from pyvis.network import Network
 class Topology:
     def __init__(self):
         pass
@@ -187,4 +188,18 @@ class Topology:
                 node += 1
         last_node = node+start-1
         return sub_grafo, last_node
+
+    def draw_topology(self, slice):
+        net = Network()
+        nodos = slice["nodos"]
+        nodos_listos = []
+        for nodo_name in nodos:
+            if nodo_name not in nodos_listos:
+                net.add_node(nodo_name)
+                enlaces = nodos[nodo_name]["enlaces"]
+                for nodo_enlace in enlaces:
+                    if nodo_enlace not in nodos_listos:
+                        net.add_node(nodo_enlace)
+                    net.add_edge(nodo_name,nodo_enlace)
+        net.show('nx.html')
 
