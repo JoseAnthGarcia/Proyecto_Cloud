@@ -181,9 +181,9 @@ class UserInterface:
             nodo = int(input("Ingrese el número de nodos: "))
             sub_grafo, last_node = topology.create_lineal_topology(prox_node, nodo)
         elif topo_type == "2":
-            nodo = int(input("Ingrese el número de filas y columnas con el formato '3-3': "))
+            nodo = input("Ingrese el número de filas y columnas con el formato '3-3': ")
             formato = nodo.split("-")
-            sub_grafo, last_node = topology.create_malla_topology(prox_node, formato[0],formato[1])
+            sub_grafo, last_node = topology.create_malla_topology(prox_node, int(formato[0]),int(formato[1]))
         elif topo_type == "3":
             nivel = int(input("Ingrese el número de niveles: "))
             sub_grafo, last_node = topology.create_tree_topology(prox_node, nivel)
