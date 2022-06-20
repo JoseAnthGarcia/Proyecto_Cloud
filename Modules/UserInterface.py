@@ -34,10 +34,10 @@ class UserInterface:
     def def_zona_disponibilidad_menu3():
         print('*********************************')
         print('Lista de servidores disponibles:')
-        print('1. Server 1')
-        print('2. Server 2')
-        print('3. Server 3')
-        print('4. Server 4')
+        print('1. Server 1 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB ')
+        print('2. Server 2 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB')
+        print('3. Server 3 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB')
+        print('4. Server 4 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB')
         print("Escriba 'exit' si terminó de escoger los servidores para su zona de disponibilidad")
         return input('Opción: ')
 
@@ -218,7 +218,7 @@ class UserInterface:
                     f.close()
                     print(f"* Slice {slice['nombre']} guardado.")
                 elif opt == "2":
-                    lista_zonas=[["zona1","4 discos, 8GB RAM, 8 CPUs"],["zona2","4 discos, 8GB RAM, 8 CPUs"],["zona3","4 discos, 8GB RAM, 8 CPUs"]]
+                    lista_zonas=[["zona1"," 4 discos-60%, 8GB RAM-50%, 8 CPUs-20%"],["zona2","4 discos-60%, 8GB RAM-70%, 8 CPUs-40%"],["zona3","4 discos-80%, 8GB RAM-90%, 8 CPUs-70%"]]
                     print("Seleccionar zona de disponibilidad:")
                     print("Lista de zonas:")
                     for zona in lista_zonas:
