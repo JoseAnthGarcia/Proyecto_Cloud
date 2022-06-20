@@ -34,10 +34,10 @@ class UserInterface:
     def def_zona_disponibilidad_menu3():
         print('*********************************')
         print('Lista de servidores disponibles:')
-        print('1. Server 1')
-        print('2. Server 2')
-        print('3. Server 3')
-        print('4. Server 4')
+        print('1. Server 1 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB ')
+        print('2. Server 2 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB')
+        print('3. Server 3 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB')
+        print('4. Server 4 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB')
         print("Escriba 'exit' si terminó de escoger los servidores para su zona de disponibilidad")
         return input('Opción: ')
 
@@ -218,8 +218,17 @@ class UserInterface:
                     f.close()
                     print(f"* Slice {slice['nombre']} guardado.")
                 elif opt == "2":
-                    # TODO
-                    pass
+                    lista_zonas=[["zona1"," 4 discos-60%, 8GB RAM-50%, 8 CPUs-20%"],["zona2","4 discos-60%, 8GB RAM-70%, 8 CPUs-40%"],["zona3","4 discos-80%, 8GB RAM-90%, 8 CPUs-70%"]]
+                    print("Seleccionar zona de disponibilidad:")
+                    print("Lista de zonas:")
+                    for zona in lista_zonas:
+                        print(f"* {zona[0]}  Consumo usado: {zona[1]} ")
+                    opt = input("Opcion: ")
+                    slice["zona"] = {"nombre":opt}
+                    print("**************************************")
+                    print("Se está implementando...")
+                    print(f"Se envía al administrador de slice: {slice}")
+                    print("**************************************")
         else:
             f = open(f"./Modules/Slices/{slice['nombre']}.json", "w")
             f.write(json.dumps(slice))
@@ -488,7 +497,7 @@ class UserInterface:
                                 else:
                                     print("***********************************")
                                     print("Detalle del slice", slice_escogido, "en la zona ", nombre_zona_escogida)
-                                    print("RAM:   CPU:   #DISCO:  ")
+                                    print("RAM: 8GB   CPU: 4  #DISCO: 10GB ")
                                     print("***********************************")
                 elif option == 4:
                     nombre_zona = o.def_zona_disponibilidad_menu()
