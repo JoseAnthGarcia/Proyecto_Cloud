@@ -444,6 +444,8 @@ class UserInterface:
                                                 print("Opción no válida")
                                 elif int(opt) == 7:
                                     slice["ultimo_nodo"] = prox_node-1
+                                    print("------Data a enviar-----")
+                                    print(slice)
                                     o.save_changes(slice, from_scratch)
                                     pass
                                 elif int(opt) == 8:
@@ -470,6 +472,7 @@ class UserInterface:
                                         print("***********************************")
                                     elif int(confirma_borrado) == 1:
                                         print("***********************************")
+                                        print("Data enviada a BD \nID de slice = ", 14)
                                         print("Se borró el slice ", slice_escogido)
                                         print("***********************************")
                 elif option == 2:
