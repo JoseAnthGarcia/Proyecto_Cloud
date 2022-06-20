@@ -225,7 +225,10 @@ class UserInterface:
                         print(f"* {zona[0]}  Consumo usado: {zona[1]} ")
                     opt = input("Opcion: ")
                     slice["zona"] = {"nombre":opt}
-                    print(slice)
+                    print("**************************************")
+                    print("Se está implementando...")
+                    print(f"Se envía al administrador de slice: {slice}")
+                    print("**************************************")
         else:
             f = open(f"./Modules/Slices/{slice['nombre']}.json", "w")
             f.write(json.dumps(slice))
