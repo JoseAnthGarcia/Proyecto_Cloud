@@ -507,6 +507,7 @@ class UserInterface:
                         server_linux_cluster = []
                         while True:
                             server_escogido = o.def_zona_disponibilidad_menu3()
+                            print("Data enviada a BD \nID de servidor = ", int(server_escogido)+10)
                             if server_escogido == "exit":
                                 print("Se registró su zona de disponibilidad" , nombre_zona, " de tipo Linux cluster en los servidores", server_linux_cluster)
                                 break
@@ -516,6 +517,7 @@ class UserInterface:
                         server_openstack = []
                         while True:
                             server_escogido = o.def_zona_disponibilidad_menu3()
+                            print("Data enviada a BD \nID de servidor = ", int(server_escogido)+10)
                             if server_escogido == "exit":
                                 print("**************************************")
                                 print("Se registró su zona de disponibilidad", nombre_zona, " de tipo Openstack en los servidores",
