@@ -144,8 +144,7 @@ class UserInterface:
         print('*********************************')
         print('Seleccionar:')
         print('1. Configuración con flavors')
-        print('2. Configuración con imágenes')
-        print('3. Configuración manual')
+        print('2. Configuración manual')
         print("Escriba 'exit' para salir del menú")
         return input('Opción: ')
 
@@ -379,28 +378,36 @@ class UserInterface:
                                             for nodo in nodos:
                                                 type = {"type": "flavor", "info_config": info_config}
                                                 slice["nodos"][nodo]["config"] = type
-                                            print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor}")
-                                        elif int(conf_nodos_mode2) == 2:
                                             # TODO: conexión a base dedatos que devuelve listado de imagenes
+                                            print("***************************************")
                                             print("Lista de imágenes:")
                                             print("* cirros")
-                                            imagen = input("Ingrese la imagen que desea configurar:")
+                                            imagen = input("Seleccione la imagen que desea configurar:")
                                             info_config = [imagen]
                                             for nodo in nodos:
-                                                type = {"type": "imagen", "info_config": info_config}
-                                                slice["nodos"][nodo]["config"] = type
-                                            print(f"Se configuró los siguientes nodos {nodos} con imagen: {imagen}")
-                                        elif int(conf_nodos_mode2) == 3:
+                                                type = {"imagen": info_config}
+                                                slice["nodos"][nodo]["config"]["imagen"] = info_config
+                                            print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor} e imagen: {imagen}")
+
+                                        elif int(conf_nodos_mode2) == 2:
                                             cpu = input("Indicar el # de CPUs:")
-                                            ram = input("Indicar la capacidad de la memoria RAM:")
-                                            disco = input("Indicar la capacidad de disco:")
+                                            ram = input("Indicar la capacidad de la memoria RAM en GB:")
+                                            disco = input("Indicar la capacidad de disco en GB:")
                                             info_config = [cpu, ram, disco]
                                             config = {}
                                             for nodo in nodos:
                                                 type = {"type": "manual", "info_config": info_config}
                                                 slice["nodos"][nodo]["config"] = type
+                                            # TODO: conexión a base dedatos que devuelve listado de imagenes
+                                            print("***************************************")
+                                            print("Lista de imágenes:")
+                                            print("* cirros")
+                                            imagen = input("Seleccione la imagen que desea configurar:")
+                                            info_config = [imagen]
+                                            for nodo in nodos:
+                                                slice["nodos"][nodo]["config"]["imagen"] = info_config
                                             print(f"Se configuró los siguientes nodos {nodos} con:")
-                                            print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco}")
+                                            print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen}")
                                         else:
                                             print("Opción no válida")
                                     elif int(conf_nodos_mode) == 2:
@@ -419,7 +426,7 @@ class UserInterface:
                                             if conf_nodos_mode == 'exit':
                                                 pass
                                             elif int(conf_nodos_mode2) == 1:
-                                                #TODO: conexión a base dedatos que devuelve listado de flavors
+                                                # TODO: conexión a base dedatos que devuelve listado de flavors
                                                 print("Lista de flavors:")
                                                 print("* m1.tiny")
                                                 flavor = input("Ingrese el flavor que desea configurar:")
@@ -427,28 +434,36 @@ class UserInterface:
                                                 for nodo in nodos:
                                                     type = {"type": "flavor", "info_config": info_config}
                                                     slice["nodos"][nodo]["config"] = type
-                                                print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor}")
-                                            elif int(conf_nodos_mode2) == 2:
                                                 # TODO: conexión a base dedatos que devuelve listado de imagenes
+                                                print("***************************************")
                                                 print("Lista de imágenes:")
                                                 print("* cirros")
-                                                imagen = input("Ingrese la imagen que desea configurar:")
+                                                imagen = input("Seleccione la imagen que desea configurar:")
                                                 info_config = [imagen]
                                                 for nodo in nodos:
-                                                    type={"type": "imagen","info_config": info_config }
-                                                    slice["nodos"][nodo]["config"]=type
-                                                print(f"Se configuró los siguientes nodos {nodos} con imagen: {imagen}")
-                                            elif int(conf_nodos_mode2) == 3:
+                                                    type = {"imagen": info_config}
+                                                    slice["nodos"][nodo]["config"]["imagen"] = info_config
+                                                print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor} e imagen: {imagen}")
+                                            elif int(conf_nodos_mode2) == 2:
                                                 cpu = input("Indicar el # de CPUs:")
-                                                ram = input("Indicar la capacidad de la memoria RAM:")
-                                                disco = input("Indicar la capacidad de disco:")
-                                                info_config=[cpu,ram,disco]
+                                                ram = input("Indicar la capacidad de la memoria RAM en GB:")
+                                                disco = input("Indicar la capacidad de disco en GB:")
+                                                info_config = [cpu, ram, disco]
                                                 config = {}
                                                 for nodo in nodos:
-                                                    type={"type": "manual","info_config": info_config }
-                                                    slice["nodos"][nodo]["config"]=type
+                                                    type = {"type": "manual", "info_config": info_config}
+                                                    slice["nodos"][nodo]["config"] = type
+                                                # TODO: conexión a base dedatos que devuelve listado de imagenes
+                                                print("***************************************")
+                                                print("Lista de imágenes:")
+                                                print("* cirros")
+                                                imagen = input("Seleccione la imagen que desea configurar:")
+                                                info_config = [imagen]
+                                                for nodo in nodos:
+                                                    #type = {"imagen": info_config}
+                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
                                                 print(f"Se configuró los siguientes nodos {nodos} con:")
-                                                print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco}")
+                                                print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen}")
                                             else:
                                                 print("Opción no válida")
                                 elif int(opt) == 7:
