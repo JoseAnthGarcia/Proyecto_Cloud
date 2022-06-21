@@ -392,8 +392,8 @@ class UserInterface:
                                             print(f"Se configuró los siguientes nodos {nodos} con imagen: {imagen}")
                                         elif int(conf_nodos_mode2) == 3:
                                             cpu = input("Indicar el # de CPUs:")
-                                            ram = input("Indicar la capacidad de la memoria RAM:")
-                                            disco = input("Indicar la capacidad de disco:")
+                                            ram = input("Indicar la capacidad de la memoria RAM en GB:")
+                                            disco = input("Indicar la capacidad de disco en GB:")
                                             info_config = [cpu, ram, disco]
                                             config = {}
                                             for nodo in nodos:
