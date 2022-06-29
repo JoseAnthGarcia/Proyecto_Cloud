@@ -474,6 +474,7 @@ class UserInterface:
                                     pass
                                 elif int(opt) == 8:
                                     topo = Topology()
+                                    print(slice)
                                     topo.draw_topology(slice)
                         else:
                             print("* Opcion no valida.")
