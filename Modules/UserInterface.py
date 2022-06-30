@@ -1,4 +1,6 @@
+from Modules.SliceAdministrator import SliceAdministrator
 from Topology import *
+from Modules.UserInterface import *
 import json
 import os
 class UserInterface:
@@ -228,11 +230,13 @@ class UserInterface:
                     print("Se está implementando...")
                     print(f"Se envía al administrador de slice: {slice}")
                     print("**************************************")
+                    result = UserInterface.create_topology(slice)
         else:
             f = open(f"./Modules/Slices/{slice['nombre']}.json", "w")
             f.write(json.dumps(slice))
             f.close()
             print("* Cambios guardados e implementando slice ...")
+            result = UserInterface.create_topology(slice)
             # TODO
 
     @staticmethod
@@ -553,4 +557,9 @@ class UserInterface:
             except Exception as e:
                 print(e)
 
+    @staticmethod
+    def create_topology(grafo):
+        sliceAdministrator = SliceAdministrator()
+        result = sliceAdministrator.create_topology(grafo)
+        pass
 # UserInterface.iniciar_programa()
