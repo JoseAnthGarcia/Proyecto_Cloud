@@ -17,7 +17,7 @@ class Validador:
         vcpu_actual = data_actual["number_cores"]
         storage_actual = data_actual["storage"]
         valid = False
-        if ram_actual > recursos[0] & vcpu_actual > recursos[1] & storage_actual > recursos[2]:
+        if vcpu_actual > recursos[0] & ram_actual > recursos[1] &  storage_actual > recursos[2]:
             valid = True
         return valid
 
@@ -60,10 +60,10 @@ class Validador:
         vcpu_actual = data_actual["number_cores"]
         storage_actual = data_actual["storage"]
         #porcentajes
-        ram_actual = ((data[0]-ram_actual)/data[0])*100
+        #ram_actual = ((data[0]-ram_actual)/data[0])*100
         #vcpu_actual = ((data[1]-vcpu_actual)/data[1])*100
-        vcpu_actual = data[1]-vcpu_actual
-        storage_actual = ((data[2]-storage_actual)/data[2])*100
+        #vcpu_actual = data[1]-vcpu_actual
+        #storage_actual = ((data[2]-storage_actual)/data[2])*100
         #registrar
         conn.Insert("recursos","ram_available,vcpu_available,storage_available",f"{ram_actual},{vcpu_actual},{storage_actual}")
         pass
