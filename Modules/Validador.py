@@ -14,7 +14,7 @@ class Validador:
         data_actual = validador.obtenerDataActual()
         data_actual = data_actual[nombre]
         ram_actual = data_actual["ram"]
-        vcpu_actual = data_actual["number_cores"]
+        vcpu_actual = data_actual["vcpu"]
         storage_actual = data_actual["storage"]
         valid = False
         if vcpu_actual > recursos[0] & ram_actual > recursos[1] &  storage_actual > recursos[2]:
@@ -57,7 +57,7 @@ class Validador:
         data_actual = validador.obtenerDataActual()
         data_actual = data_actual[nombre]
         ram_actual = data_actual["ram"]
-        vcpu_actual = data_actual["number_cores"]
+        vcpu_actual = data_actual["vcpu"]
         storage_actual = data_actual["storage"]
         #porcentajes
         #ram_actual = ((data[0]-ram_actual)/data[0])*100
