@@ -117,11 +117,23 @@ def scheduler():
     "ultimo_nodo": 8,
     "zona": {"nombre": "zona1"}}
 
-    zona_disponibilidad= data['zona']
-    lista_worker_general_filtrada=filtrado(zona_disponibilidad)
+    #VCPU-RAM-STORAGE
     lista_vm_topologia=[]
+    nodos=data['nodos']
+    for n in nodos.values():
+        if (n['config']['type'] == 'manual'):
+            vcpu=n['config']['info_config'][0]
+            ram=n['config']['info_config'][1]
+            storage=n['config']['info_config'][2]
+            vm=Vm(ram,storage,vcpu)
+            lista_vm_topologia.append(vm)
+
+    zona_disponibilidad= data['zona']['nombre']
+    lista_worker_general_filtrada=filtrado(zona_disponibilidad)
+    
     for vm in lista_vm_topologia:
         worker_elegido= ordenamiento_coeficiente(lista_worker_general_filtrada,vm)
+        print(worker_elegido)
 
 
 
