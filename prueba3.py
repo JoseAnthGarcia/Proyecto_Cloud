@@ -1,18 +1,3 @@
-import pymysql
-
-"""
-class Scheduler:
-    def __init__(self):
-        pass
-
-    def decisor(delf, grafo):
-        zona_nombre = grafo["zona"]["nombre"]
-        # hots = 
-        pass
-
-    def db_connection(self, zona):
-        pass
-"""
 lista_worker_general_filtrada=[]
 
 class Worker:
@@ -24,6 +9,8 @@ class Worker:
         self.ram=ram
         self.disco=disco
         self.vcpu=vcpu
+    def __iter__ (self):
+        return 0
 
 class Vm:
     def __init__ (self, ram_requerida, disco_requerido, vcpu_requeridas):
@@ -34,29 +21,16 @@ class Vm:
 
 
 def filtrado(zona_disponibilidad):
-    #Hacer select de todos los workers y filtrarlos (query con un where zona_disponibilidad =)#
-    query="select s.id_servidor, r.ram_available, r.storage_available, r.vcpu_available, r.ram, r.storage, r.vcpu from recursos as r inner join servidor as s on s.recursos_id_estado=r.id_estado inner join zona_disponibilidad as zd on zd.idzona_disponibilidad=s.zona_disponibilidad_idzona_disponibilidad where zd.nombre= "+zona_disponibilidad
-
-    ip="10.20.12.35"
-    username="grupo1_final"
-    paswd="grupo1_final"
-    database="bd_general"
-    con = pymysql.connect(host=ip,user= username,password=paswd, db=database)
-    resultado=[]
-    try:
-        with con.cursor() as cur1:
-            cur1.execute(query)
-        resultado1 = cur1.fetchall()
-
-        for f in resultado1:
-            worker=Worker(f[0],f[1],f[2],f[3],f[4],f[5],f[6])
-            lista_worker_general_filtrada.append(worker)
-    finally:
-	    con.close()
-
+    worker=Worker(1,90,80,5,200,200,10)
+    worker2=Worker(2,50,80,3,250,120,5)
+    worker3=Worker(3,80,80,4,300,90,5)
+    lista_worker_general_filtrada.append(worker)
+    lista_worker_general_filtrada.append(worker2)
+    lista_worker_general_filtrada.append(worker3)
+    return lista_worker_general_filtrada
 
 def takeSecond(elem):
-    print(elem)
+    #print(elem)
     return elem[0]
 
 
@@ -76,16 +50,18 @@ def ordenamiento_coeficiente(lista_worker_general_filtrada,vm):
     w = 0
     for worker in lista_worker_general_filtrada:
         coeficiente= calculo_coeficiente(worker.ram_disponible, worker.disco_disponible, vm.vcpu_requeridas, worker.vcpu_disponible,worker.ram,worker.disco)
+        print(coeficiente)
         #par=[coeficiente,worker]
         par=[coeficiente,w]
         lista_worker_coeficiente.append(par)
         w += 1
     
-    print(lista_worker_coeficiente)
+    #print(lista_worker_coeficiente)
   
     lista_worker_coeficiente.sort(key=takeSecond, reverse = True)
+    print()
     
-    print((lista_worker_coeficiente))
+    #print((lista_worker_coeficiente))
     for par in lista_worker_coeficiente:
         lista_worker_ordenada.append(lista_worker_general_filtrada[par[1]])
     for worker in lista_worker_ordenada:
@@ -102,22 +78,22 @@ def ordenamiento_coeficiente(lista_worker_general_filtrada,vm):
             lista_worker_general_filtrada[contador]=worker_nuevo
             break
         else :
-            print ('## No es posible instancia esta topología ##')
-            worker_elegido = 0
-        
+            if (contador==len(lista_worker_ordenada)):
+                print ('## No es posible instancia esta topología ##')
+                worker_elegido = 0
         contador= contador+1
     return worker_elegido
 
 
 
 data= {"nodos": {"n0": {"enlaces": ["n1"],
-                "config": {"type": "manual", "info_config": ["1", "1", "1"], "imagen": "cirros"}},                          
+                "config": {"type": "manual", "info_config": ["1", "10", "10"], "imagen": "cirros"}},                          
             "n1": {"enlaces": ["n0"],
                     "config": {"type": "flavor", "info_config": ["m1.tyny"], "imagen": ["cirros"]}},
             "n2": {"enlaces": ["n3", "n4"],
                     "config": {"type": "flavor", "info_config": ["m1.tyny"], "imagen": ["cirros"]}},
             "n3": {"enlaces": ["n5", "n6", "n2"],
-                    "config": {"type": "manual", "info_config": ["1", "1", "1"], "imagen": "cirros"}},
+                    "config": {"type": "manual", "info_config": ["2", "20", "20"], "imagen": "cirros"}},
             "n4": {"enlaces": ["n7", "n8", "n2"],
                     "config": {"type": "flavor", "info_config": ["m1.tyny"], "imagen": ["cirros"]}},
             "n5": {"enlaces": ["n3"],
@@ -125,7 +101,7 @@ data= {"nodos": {"n0": {"enlaces": ["n1"],
             "n6": {"enlaces": ["n3"],
                     "config": {"type": "flavor", "info_config": ["m1.tyny"], "imagen": ["cirros"]}},
             "n7": {"enlaces": ["n4"],
-                    "config": {"type": "manual", "info_config": ["1", "1", "1"], "imagen": "cirros"}},
+                    "config": {"type": "manual", "info_config": ["3", "30", "30"], "imagen": "cirros"}},
             "n8": {"enlaces": ["n4"],
                     "config": {"type": "flavor", "info_config": ["m1.tyny"], "imagen": ["cirros"]}}},
     "nombre": "tel142",
