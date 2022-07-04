@@ -1,18 +1,5 @@
 import pymysql
 
-"""
-class Scheduler:
-    def __init__(self):
-        pass
-
-    def decisor(delf, grafo):
-        zona_nombre = grafo["zona"]["nombre"]
-        # hots = 
-        pass
-
-    def db_connection(self, zona):
-        pass
-"""
 lista_worker_general_filtrada=[]
 
 class Worker:
