@@ -34,10 +34,10 @@ def filtrado(zona_disponibilidad):
     #Hacer select de todos los workers y filtrarlos (query con un where zona_disponibilidad =)#
     query="select s.id_servidor, r.ram_available, r.storage_available, r.vcpu_available from recursos as r inner join servidor as s on s.recursos_id_estado=r.id_estado inner join zona_disponibilidad as zd on zd.idzona_disponibilidad=s.zona_disponibilidad_idzona_disponibilidad where zd.nombre= "+zona_disponibilidad
 
-    ip="localhost"
-    username="root"
-    paswd="root"
-    database="pruebafinal"
+    ip="10.20.12.35"
+    username="grupo1_final"
+    paswd="grupo1_final"
+    database="bd_general"
     con = pymysql.connect(host=ip,user= username,password=paswd, db=database)
     resultado=[]
     try:
