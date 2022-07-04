@@ -10,11 +10,17 @@ class Validador:
     def __init__(self):
         pass
 
-    def validar_recursos(delf, recursos):
-        ram = recursos[0]
-        disco = recursos[1]
-        cpu = recursos[2]
-        pass
+    def validar_recursos(delf, nombre,recursos):
+        data_actual = validador.obtenerDataActual()
+        data_actual[nombre]
+        ram = data_actual[0]
+        vcpu = data_actual[1]
+        storage = data_actual[2]
+        valid = False
+        if ram > recursos[0] & vcpu > recursos[1] & storage > recursos[2]:
+            valid = True
+        return valid
+
 
     def validar_estado_vm(delf, vm):
         con = Conexion()
