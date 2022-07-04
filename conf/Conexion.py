@@ -6,10 +6,10 @@ class Conexion:
         pass
 
     def conectar(self):
-        ip=""
-        username=""
-        paswd=""
-        database=""
+        ip="10.20.12.135"
+        username="grupo1_final"
+        paswd="grupo1_final"
+        database="bd_general"
         con = pymysql.connect(host=ip,user= username,password=paswd, db=database)
         return con
 

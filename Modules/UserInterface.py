@@ -395,7 +395,7 @@ class UserInterface:
 
                                         elif int(conf_nodos_mode2) == 2:
                                             cpu = input("Indicar el # de CPUs:")
-                                            ram = input("Indicar la capacidad de la memoria RAM en GB:")
+                                            ram = input("Indicar la capacidad de la memoria RAM en MB:")
                                             disco = input("Indicar la capacidad de disco en GB:")
                                             info_config = [cpu, ram, disco]
                                             config = {}
