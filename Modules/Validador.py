@@ -27,8 +27,20 @@ class Validador:
         estado_vm = con.Select("estado","vm",f"nombre = {vm}")
         return estado_vm
 
-    def enviarData(self):
-        pass
+    def registrarDataCadaMinuto(self):
+        conn = Conexion()
+        server_names = ["worker1","worker2","worker3","worker4","worker5","worker6",
+                        "compute1","compute2","compute3","compute4","compute5","compute6"]
+        ts = time.time()
+        timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        try:
+            with conn.cursor() as cur:
+                schedule.every(1).minutes.do(validador.registerAllData(server_names),cur=cur,conn=conn,timestamp=timestamp)
+                while True:
+                    schedule.run_pending()
+                    time.sleep(1)
+        finally:
+            conn.close()
 
     def obtenerDataActual(self):
         url = 'http://10.20.12.136:8081/ram'
