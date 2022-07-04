@@ -17,8 +17,9 @@ class Validador:
         pass
 
     def validar_estado_vm(delf, vm):
-
-        pass
+        con = Conexion()
+        estado_vm = con.Select("estado","vm",f"nombre = {vm}")
+        return estado_vm
 
     def enviarData(self):
         pass
