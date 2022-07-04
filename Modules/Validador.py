@@ -60,9 +60,10 @@ class Validador:
         vcpu_actual = data_actual["vcpu"]
         storage_actual = data_actual["storage"]
         #porcentajes
-        ram_actual = ((data[0]-ram_actual[0])/data[0])*100
-        vcpu_actual = ((data[1]-vcpu_actual[1])/data[1])*100
-        storage_actual = ((data[2]-storage_actual[2])/data[2])*100
+        ram_actual = ((data[0]-ram_actual)/data[0])*100
+        #vcpu_actual = ((data[1]-vcpu_actual)/data[1])*100
+        vcpu_actual = data[1]-vcpu_actual
+        storage_actual = ((data[2]-storage_actual)/data[2])*100
         #registrar
         conn.Insert("recursos","ram_available,vcpu_available,storage_available",f"{ram_actual},{vcpu_actual},{storage_actual}")
         pass
