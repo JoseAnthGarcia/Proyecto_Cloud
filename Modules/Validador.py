@@ -12,12 +12,12 @@ class Validador:
 
     def validar_recursos(delf, nombre,recursos):
         data_actual = validador.obtenerDataActual()
-        data_actual[nombre]
-        ram = data_actual[0]
-        vcpu = data_actual[1]
-        storage = data_actual[2]
+        data_actual = data_actual[nombre]
+        ram_actual = data_actual["ram"]
+        vcpu_actual = data_actual["vcpu"]
+        storage_actual = data_actual["storage"]
         valid = False
-        if ram > recursos[0] & vcpu > recursos[1] & storage > recursos[2]:
+        if ram_actual > recursos[0] & vcpu_actual > recursos[1] & storage_actual > recursos[2]:
             valid = True
         return valid
 
@@ -44,10 +44,13 @@ class Validador:
         data = conn.Select("ram,vcpu,storage","recursos",f"id_estado = {id}")
         data_actual = validador.obtenerDataActual()
         data_actual = data_actual[nombre]
+        ram_actual = data_actual["ram"]
+        vcpu_actual = data_actual["vcpu"]
+        storage_actual = data_actual["storage"]
         #porcentajes
-        ram_actual = (data_actual[0]/data[0])*100
-        vcpu_actual = (data_actual[1]/data[1])*100
-        storage_actual = (data_actual[2]/data[2])*100
+        ram_actual = (ram_actual[0]/data[0])*100
+        vcpu_actual = (vcpu_actual[1]/data[1])*100
+        storage_actual = (storage_actual[2]/data[2])*100
         #registrar
         conn.Insert("recursos","ram_available,vcpu_available,storage_available",f"{ram_actual},{vcpu_actual},{storage_actual}")
         pass
