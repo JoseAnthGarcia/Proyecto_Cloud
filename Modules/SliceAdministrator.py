@@ -5,6 +5,6 @@ class SliceAdministrator:
         pass
 
     def create_topology(self, grafo):
-        scheduler = Scheduler()
-        scheduler.decisor(grafo)
-        pass
+        FACTOR = 0.5
+        nuevo_grafo = scheduler_main(grafo, FACTOR)
+        return nuevo_grafo

@@ -13,17 +13,17 @@ class Worker:
         self.vcpu=vcpu
 
 class Vm:
-    def __init__ (self, ram_requerida, disco_requerido, vcpu_requeridas):
+    def __init__ (self,nodo_nombre , ram_requerida, disco_requerido, vcpu_requeridas):
+        self.nodo_nombre = nodo_nombre
         self.ram_requerida=ram_requerida
         self.disco_requerido=disco_requerido
         self.vcpu_requeridas=vcpu_requeridas
 
 
 
-def filtrado(zona_disponibilidad):
+def filtrado(zona_disponibilidad, FACTOR):
     #Hacer select de todos los workers y filtrarlos (query con un where zona_disponibilidad =)#
-    query="select s.id_servidor, r.ram_available, r.storage_available, r.vcpu_available, r.ram, r.storage, r.vcpu from recursos as r inner join servidor as s on s.id_recurso=r.id_recursos inner join zona_disponibilidad as zd on zd.idzona_disponibilidad=s.id_zona where zd.nombre="+zona_disponibilidad
-
+    query="select s.id_servidor, r.ram_available, r.storage_available, r.vcpu_available, r.ram, r.storage, r.vcpu from recursos as r inner join servidor as s on s.recursos_id_estado=r.id_estado inner join zona_disponibilidad as zd on zd.idzona_disponibilidad=s.zona_disponibilidad_idzona_disponibilidad where zd.nombre= "+zona_disponibilidad
     ip="10.20.12.35"
     username="grupo1_final"
     paswd="grupo1_final"
@@ -36,7 +36,7 @@ def filtrado(zona_disponibilidad):
         resultado1 = cur1.fetchall()
 
         for f in resultado1:
-            worker=Worker(f[0],f[1],f[2],f[3],f[4],f[5],f[6])
+            worker=Worker(f[0],f[1]*FACTOR,f[2]*FACTOR,f[3]*FACTOR,f[4]*FACTOR,f[5]*FACTOR,f[6]*FACTOR)
             lista_worker_general_filtrada.append(worker)
     finally:
 	    con.close()
@@ -96,43 +96,26 @@ def ordenamiento_coeficiente(lista_worker_general_filtrada,vm):
     return worker_elegido
 
 
-
-data= {"nodos": {"n0": {"enlaces": ["n1"],
-                "config": {"type": "manual", "info_config": ["1", "1", "1"], "imagen": "cirros"}},                          
-            "n1": {"enlaces": ["n0"],
-                    "config": {"type": "flavor", "info_config": ["m1.tyny"], "imagen": ["cirros"]}},
-            "n2": {"enlaces": ["n3", "n4"],
-                    "config": {"type": "flavor", "info_config": ["m1.tyny"], "imagen": ["cirros"]}},
-            "n3": {"enlaces": ["n5", "n6", "n2"],
-                    "config": {"type": "manual", "info_config": ["1", "1", "1"], "imagen": "cirros"}},
-            "n4": {"enlaces": ["n7", "n8", "n2"],
-                    "config": {"type": "flavor", "info_config": ["m1.tyny"], "imagen": ["cirros"]}},
-            "n5": {"enlaces": ["n3"],
-                    "config": {"type": "flavor", "info_config": ["m1.tyny"], "imagen": ["cirros"]}},
-            "n6": {"enlaces": ["n3"],
-                    "config": {"type": "flavor", "info_config": ["m1.tyny"], "imagen": ["cirros"]}},
-            "n7": {"enlaces": ["n4"],
-                    "config": {"type": "manual", "info_config": ["1", "1", "1"], "imagen": "cirros"}},
-            "n8": {"enlaces": ["n4"],
-                    "config": {"type": "flavor", "info_config": ["m1.tyny"], "imagen": ["cirros"]}}},
-    "nombre": "tel142",
-    "ultimo_nodo": 8,
-    "zona": {"nombre": "Pabellón V"}}
+def scheduler_main(data, FACTOR):
 
     #VCPU-RAM-STORAGE
-lista_vm_topologia=[]
-nodos=data['nodos']
-for n in nodos.values():
-    if (n['config']['type'] == 'manual'):
-        vcpu=n['config']['info_config'][0]
-        ram=n['config']['info_config'][1]
-        storage=n['config']['info_config'][2]
-        vm=Vm(int(ram),int(storage),int(vcpu))
-        lista_vm_topologia.append(vm)
+    lista_vm_topologia=[]
+    nodos=data['nodos']
+    for nodo_key in nodos:
+        if (nodos[nodo_key]['config']['type'] == 'manual'):
+            vcpu=nodos[nodo_key]['config']['info_config'][0]
+            ram=nodos[nodo_key]['config']['info_config'][1]
+            storage=nodos[nodo_key]['config']['info_config'][2]
+            vm=Vm(nodo_key ,int(ram),int(storage),int(vcpu))
+            lista_vm_topologia.append(vm)
 
-zona_disponibilidad= data['zona']['nombre']
-lista_worker_general_filtrada=filtrado(zona_disponibilidad)
-    
-for vm in lista_vm_topologia:
-    worker_elegido= ordenamiento_coeficiente(lista_worker_general_filtrada,vm)
-    print(worker_elegido.id_servidor)
+    zona_disponibilidad= data['zona']['nombre']
+    lista_worker_general_filtrada=filtrado(zona_disponibilidad, FACTOR)
+        
+    for vm in lista_vm_topologia:
+        worker_elegido= ordenamiento_coeficiente(lista_worker_general_filtrada,vm)
+        data["nodos"][vm.nodo_nombre] = worker_elegido.id_servidor
+        print(data)
+        print("---------------------------------------------------")
+
+    return data
