@@ -124,4 +124,6 @@ lista_worker_general_filtrada=filtrado(zona_disponibilidad)
     
 for vm in lista_vm_topologia:
     worker_elegido= ordenamiento_coeficiente(lista_worker_general_filtrada,vm)
-    print(worker_elegido.id_servidor)
+    data['id-worker']=worker_elegido.id_servidor
+    print(data)
+    print("---------------------------------------------------")
