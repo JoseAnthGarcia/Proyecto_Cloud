@@ -22,7 +22,7 @@ class Vm:
 
 def filtrado(zona_disponibilidad):
     #Hacer select de todos los workers y filtrarlos (query con un where zona_disponibilidad =)#
-    query="select s.id_servidor, r.ram_available, r.storage_available, r.vcpu_available, r.ram, r.storage, r.vcpu from recursos as r inner join servidor as s on s.recursos_id_estado=r.id_estado inner join zona_disponibilidad as zd on zd.idzona_disponibilidad=s.zona_disponibilidad_idzona_disponibilidad where zd.nombre= "+zona_disponibilidad
+    query="select s.id_servidor, r.ram_available, r.storage_available, r.vcpu_available, r.ram, r.storage, r.vcpu from recursos as r inner join servidor as s on s.id_recurso=r.id_recursos inner join zona_disponibilidad as zd on zd.idzona_disponibilidad=s.id_zona where zd.nombre="+zona_disponibilidad
 
     ip="10.20.12.35"
     username="grupo1_final"
@@ -117,7 +117,7 @@ data= {"nodos": {"n0": {"enlaces": ["n1"],
                     "config": {"type": "flavor", "info_config": ["m1.tyny"], "imagen": ["cirros"]}}},
     "nombre": "tel142",
     "ultimo_nodo": 8,
-    "zona": {"nombre": "zona1"}}
+    "zona": {"nombre": "Pabellón V"}}
 
     #VCPU-RAM-STORAGE
 lista_vm_topologia=[]
