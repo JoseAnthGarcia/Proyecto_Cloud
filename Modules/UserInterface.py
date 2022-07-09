@@ -561,5 +561,3 @@ class UserInterface:
     def create_topology(grafo):
         sliceAdministrator = SliceAdministrator()
         result = sliceAdministrator.create_topology(grafo)
-        pass
-# UserInterface.iniciar_programa()
