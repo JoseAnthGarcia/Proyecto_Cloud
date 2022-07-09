@@ -547,6 +547,8 @@ class UserInterface:
                                     nombre_escogido=dic.pop(server_escogido)
                                     print(f"Server escogido {nombre_escogido}")
                                 server_linux_cluster.append(nombre_escogido)
+                            zona = {nombre_zona: {server_linux_cluster}}
+                            print(zona)
                     elif tipo_zona == 2:
                         server_openstack = []
                         while True:
@@ -563,6 +565,8 @@ class UserInterface:
                                     nombre_escogido=dic.pop(server_escogido)
                                     print(f"Server escogido {nombre_escogido}")
                                 server_openstack.append(nombre_escogido)
+                            zona = {nombre_zona: {server_linux_cluster}}
+                            print(zona)
                     else:
                         break
                 elif option == 5:
