@@ -3,6 +3,8 @@ from Topology import *
 from Modules.UserInterface import *
 import json
 import os
+from conf.Conexion import *
+
 class UserInterface:
     def __init__(self):
         self.Menu=None
@@ -35,13 +37,22 @@ class UserInterface:
     @staticmethod
     def def_zona_disponibilidad_menu3():
         print('*********************************')
+        conn = Conexion()
+        server = conn.Select("recursos_id_estado,servidor,id_servidor", "servidor","-1")
         print('Lista de servidores disponibles:')
+        i=0
+        lista=[]
+        for nombre in server:
+            i=i+1
+            id = conn.Select("recursos_id_estado", "servidor", f"nombre = {nombre}")
+            data = conn.Select("ram,vcpu,storage", "recursos", f"id_estado = {id}")
+            print(f"{i}. {nombre} - Capacidad: RAM:{data[0]}MB CPU:{data[1]} DISCO:{data[2]}")
+            dic = {i: nombre}
+            lista.append(dic)
         print('1. Server 1 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB ')
-        print('2. Server 2 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB')
-        print('3. Server 3 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB')
-        print('4. Server 4 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB')
+        #print('2. Server 2 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB')
         print("Escriba 'exit' si terminó de escoger los servidores para su zona de disponibilidad")
-        return input('Opción: ')
+        return input('Opción: '),lista
 
     @staticmethod
     def def_listar_menu1():
@@ -526,18 +537,23 @@ class UserInterface:
                     if tipo_zona == 1:
                         server_linux_cluster = []
                         while True:
-                            server_escogido = o.def_zona_disponibilidad_menu3()
-                            print("Data enviada a BD \nID de servidor = ", int(server_escogido)+10)
+                            server_escogido,lista = o.def_zona_disponibilidad_menu3()
+                            #print("Data enviada a BD \nID de servidor = ", int(server_escogido)+1)
                             if server_escogido == "exit":
                                 print("Se registró su zona de disponibilidad" , nombre_zona, " de tipo Linux cluster en los servidores", server_linux_cluster)
                                 break
                             else:
-                                server_linux_cluster.append(server_escogido)
+                                for dic in lista:
+                                    nombre_escogido=dic.pop(server_escogido)
+                                    print(f"Server escogido {nombre_escogido}")
+                                server_linux_cluster.append(nombre_escogido)
+                            zona = {nombre_zona: {server_linux_cluster}}
+                            print(zona)
                     elif tipo_zona == 2:
                         server_openstack = []
                         while True:
-                            server_escogido = o.def_zona_disponibilidad_menu3()
-                            print("Data enviada a BD \nID de servidor = ", int(server_escogido)+10)
+                            server_escogido,lista = o.def_zona_disponibilidad_menu3()
+                            #print("Data enviada a BD \nID de servidor = ", int(server_escogido)+10)
                             if server_escogido == "exit":
                                 print("**************************************")
                                 print("Se registró su zona de disponibilidad", nombre_zona, " de tipo Openstack en los servidores",
@@ -545,7 +561,12 @@ class UserInterface:
                                 print("**************************************")
                                 break
                             else:
-                                server_openstack.append(server_escogido)
+                                for dic in lista:
+                                    nombre_escogido=dic.pop(server_escogido)
+                                    print(f"Server escogido {nombre_escogido}")
+                                server_openstack.append(nombre_escogido)
+                            zona = {nombre_zona: {server_linux_cluster}}
+                            print(zona)
                     else:
                         break
                 elif option == 5:

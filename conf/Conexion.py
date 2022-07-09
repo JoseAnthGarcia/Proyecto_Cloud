@@ -19,9 +19,9 @@ class Conexion:
         try:
             with con.cursor() as cur:
                 if condicion=="-1":
-                    cur.execute("Select "+valores+" from " +tabla+ " where "+condicion)
+                    cur.execute("Select "+valores+" from " +tabla)
                 else:
-                    cur.execute("Select "+valores+" from "+tabla)
+                    cur.execute("Select "+valores+" from "+tabla+ " where "+condicion)
                 resultado = cur.fetchall()
         finally:
             con.close()
