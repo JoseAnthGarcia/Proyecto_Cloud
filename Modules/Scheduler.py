@@ -23,9 +23,8 @@ class Vm:
 
 
 def filtrado(zona_disponibilidad, FACTOR):
-
     #Hacer select de todos los workers y filtrarlos (query con un where zona_disponibilidad =)#
-    query="select s.id_servidor, r.ram_available, r.storage_available, r.vcpu_available, r.ram, r.storage, r.vcpu from recursos as r inner join servidor as s on s.id_recurso=r.id_recursos inner join zona_disponibilidad as zd on zd.idzona_disponibilidad=s.id_zona where zd.nombre= "+zona_disponibilidad
+    query="select s.id_servidor, r.ram_available, r.storage_available, r.vcpu_available, r.ram, r.storage, r.vcpu from recursos as r inner join servidor as s on s.id_recurso=r.id_recursos inner join zona_disponibilidad as zd on zd.idzona_disponibilidad=s.id_zona where zd.nombre= %s"
 
     ip="10.20.12.35"
     username="grupo1_final"
@@ -35,23 +34,25 @@ def filtrado(zona_disponibilidad, FACTOR):
     resultado=[]
     try:
         with con.cursor() as cur1:
-            cur1.execute(query)
+            cur1.execute(query, (zona_disponibilidad,))
         resultado1 = cur1.fetchall()
 
         for f in resultado1:
-            worker=Worker(f[0],f[1]*FACTOR,f[2]*FACTOR,f[3]*FACTOR,f[4]*FACTOR,f[5]*FACTOR,f[6]*FACTOR)
+            worker=Worker(f[0],float(f[1])*FACTOR,float(f[2])*FACTOR,float(f[3])*FACTOR,float(f[4])*FACTOR,float(f[5])*FACTOR,float(f[6])*FACTOR)
             lista_worker_general_filtrada.append(worker)
     finally:
-	    con.close()
-
+        con.close()
+        return lista_worker_general_filtrada
 
 def takeSecond(elem):
-    print(elem)
     return elem[0]
 
 
 def calculo_coeficiente(ram_disponible, disco_disponible, vcpu_requeridas, vcpu_disponible,ram,disco):
-    coeficiente = 0.5*(ram_disponible/ram)+0.25*(disco_disponible/disco) + 0.25*(vcpu_requeridas/vcpu_disponible)
+    if (ram==0 or disco==0 or vcpu_disponible==0):
+        coeficiente = 0
+    else:
+        coeficiente = 0.5*(ram_disponible/ram)+0.25*(disco_disponible/disco) + 0.25*(vcpu_requeridas/vcpu_disponible)
     return coeficiente
 
 def ordenamiento_coeficiente(lista_worker_general_filtrada,vm):
@@ -70,15 +71,19 @@ def ordenamiento_coeficiente(lista_worker_general_filtrada,vm):
         par=[coeficiente,w]
         lista_worker_coeficiente.append(par)
         w += 1
-    
-    print(lista_worker_coeficiente)
   
     lista_worker_coeficiente.sort(key=takeSecond, reverse = True)
     
-    print((lista_worker_coeficiente))
+    new_list = []
     for par in lista_worker_coeficiente:
         lista_worker_ordenada.append(lista_worker_general_filtrada[par[1]])
+        new_list.append(f"worker_{lista_worker_general_filtrada[par[1]].id_servidor}")
+    print(f"** Orden de prioridad: {new_list} ==> {new_list[0]} es el tentativo servidor físico")
+    print("-- Evaluacion de recursos: ")
+    contador1 = 0
+    print(f"Se necesita {vm.ram_requerida} de RAM, {vm.disco_requerido} de disco y {vm.vcpu_requeridas} vcpus")
     for worker in lista_worker_ordenada:
+        print(f"Worker {worker.id_servidor} tiene de {worker.ram_disponible} RAM, {worker.disco_disponible} de disco y {worker.vcpu_disponible} vcpus")
         if (worker.ram_disponible >= vm.ram_requerida and worker.disco_disponible >= vm.disco_requerido and worker.vcpu_disponible >= vm.vcpu_requeridas):
             worker_elegido = worker
             worker_nuevo = worker_elegido
@@ -90,11 +95,13 @@ def ordenamiento_coeficiente(lista_worker_general_filtrada,vm):
             worker_nuevo.vcpu_disponible=vcpu_total_new
             lista_worker_general_filtrada= lista_worker_ordenada
             lista_worker_general_filtrada[contador]=worker_nuevo
+            print(f"Worker {worker.id_servidor} cumple con los recursos solicitados.")
             break
         else :
-            print ('## No es posible instancia esta topología ##')
-            worker_elegido = 0
-        
+            contador1 += 1
+            if (contador1 == len(lista_worker_ordenada)):
+                print("Ningun worker cumple con los recursos solicitados.")
+                worker_elegido = None
         contador= contador+1
     return worker_elegido
 
@@ -115,11 +122,20 @@ def scheduler_main(data, FACTOR):
 
     zona_disponibilidad= data['zona']['nombre']
     lista_worker_general_filtrada=filtrado(zona_disponibilidad, FACTOR)
-        
+    print("** Los workers filtrados por zona de disponibilidad son:")
+    for worker in lista_worker_general_filtrada:
+        print(f"- Worker {worker.id_servidor}")
+    print("---------------------------------------------------")
+    
+    result = True
     for vm in lista_vm_topologia:
         worker_elegido= ordenamiento_coeficiente(lista_worker_general_filtrada,vm)
-        data["nodos"][vm.nodo_nombre] = worker_elegido.id_servidor
-        print(data)
-        print("---------------------------------------------------")
+        if worker_elegido==None:
+            result = False
+            break
+        else:
+            data["nodos"][vm.nodo_nombre]["id_worker"] = worker_elegido.id_servidor
+            print(data)
+            print("---------------------------------------------------")
 
-    return data
+    return data, result
