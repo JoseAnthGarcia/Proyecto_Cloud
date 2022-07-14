@@ -35,50 +35,73 @@ class UserInterface:
         return input('Opción: ')
 
     @staticmethod
+    def listar_slices(tipo):
+        conn = Conexion()
+        server = conn.Select("nombre,id_", "slice",f"tipo = '{tipo}' ")
+        for nombre in server:
+            print(f"Slice: {nombre[0]}")
+
+    @staticmethod
     def def_zona_disponibilidad_menu3():
         print('*********************************')
         conn = Conexion()
-        server = conn.Select("recursos_id_estado,servidor,id_servidor", "servidor","-1")
-        print('Lista de servidores disponibles:')
+        #server = conn.Select("nombre", "servidor","id_zona < 0")
+        server = conn.Select("nombre", "servidor", "-1")
         i=0
         lista=[]
-        for nombre in server:
-            i=i+1
-            id = conn.Select("recursos_id_estado", "servidor", f"nombre = {nombre}")
-            data = conn.Select("ram,vcpu,storage", "recursos", f"id_estado = {id}")
-            print(f"{i}. {nombre} - Capacidad: RAM:{data[0]}MB CPU:{data[1]} DISCO:{data[2]}")
-            dic = {i: nombre}
-            lista.append(dic)
-        print('1. Server 1 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB ')
-        #print('2. Server 2 - Capacidad: RAM:8GB  CPU:12 DISCO:10GB')
-        print("Escriba 'exit' si terminó de escoger los servidores para su zona de disponibilidad")
-        return input('Opción: '),lista
+        if len(server) == 0:
+            print("No hay servidores disponibles")
+            return lista,''
+        else:
+            print("Seleccione lo servidores indicando los número separandolo por comas (1,2)")
+            print('Lista de servidores disponibles:')
+            for nombre in server:
+                i=i+1
+                id = conn.Select("id_recurso", "servidor", f"nombre = '{nombre[0]}'")
+                id2=id[0]
+                id3=id2[0]
+                data = conn.Select("ram,vcpu,storage", "recursos", f"id_recursos = {id3}")
+                ram=int(data[0][0])/1000000
+                disco = int(data[0][2]) / 1000000
+                print(f"{i}. {nombre[0]} - Capacidad: RAM:{str(ram)} MB CPU:{data[0][1]} DISCO:{str(disco)} MB")
+                dic = {i: nombre[0]}
+                lista.append(dic)
+            print("Escriba 'exit' si terminó de escoger los servidores para su zona de disponibilidad")
+            return lista,input('Opción: ')
 
     @staticmethod
     def def_listar_menu1():
         print('*********************************')
+        conn = Conexion()
+        zonas = conn.Select("nombre","zona_disponibilidad","-1")
         print('Seleccione una zona de disponibilidad:')
         print('Lista de zonas de disponibilidad:')
-        print('1. Zona 1')
-        print('2. Zona 2')
-        print('3. Zona 3')
-        print('4. Zona 4')
-        print('5. Zona 5')
+        i=0
+        lista=[]
+        for zona in zonas:
+            i=i+1
+            print(f"{i}. Zona: {zona[0]}")
+            dic = {i: zona[0]}
+            lista.append(dic)
         print("Escriba 'exit' para salir del menú")
-        return input('Opción: ')
+        return lista,input('Opción: ')
 
     @staticmethod
-    def def_listar_menu2():
+    def def_listar_menu2(zona):
         print('*********************************')
-        print('Seleccione un slice si desea verlo con mayor detalle:')
-        print('Lista de slices:')
-        print('1. Slice 1')
-        print('2. Slice 2')
-        print('3. Slice 3')
-        print('4. Slice 4')
-        print('5. Slice 5')
+        conn = Conexion()
+        zonas = conn.Select("nombre", "zona_disponibilidad", "-1")
+        print('Seleccione una zona de disponibilidad:')
+        print('Lista de zonas de disponibilidad:')
+        i = 0
+        lista = []
+        for zona in zonas:
+            i = i + 1
+            print(f"{i}. Zona: {zona[0]}")
+            dic = {i: zona[0]}
+            lista.append(dic)
         print("Escriba 'exit' para salir del menú")
-        return input('Opción: ')
+        return lista, input('Opción: ')
 
     @staticmethod
     def def_borrar_menu3(nombre):
@@ -517,11 +540,15 @@ class UserInterface:
                                         print("***********************************")
                 elif option == 2:
                     while True:
-                        nombre_zona_escogida = o.def_listar_menu1()
-                        if nombre_zona_escogida == "exit":
+                        lista,zona_escogida = o.def_listar_menu1()
+                        if zona_escogida == "exit":
                             break
                         else:
                             while True:
+                                for dic in lista:
+                                    nombre_escogido = dic.pop(int(zona_escogida))
+                                    print(f"Zona escogida: {nombre_escogido}")
+
                                 slice_escogido = o.def_listar_menu2()
                                 if slice_escogido == "exit":
                                     break
@@ -537,23 +564,24 @@ class UserInterface:
                     if tipo_zona == 1:
                         server_linux_cluster = []
                         while True:
-                            server_escogido,lista = o.def_zona_disponibilidad_menu3()
-                            #print("Data enviada a BD \nID de servidor = ", int(server_escogido)+1)
+                            lista,server_escogido = o.def_zona_disponibilidad_menu3()
                             if server_escogido == "exit":
                                 print("Se registró su zona de disponibilidad" , nombre_zona, " de tipo Linux cluster en los servidores", server_linux_cluster)
                                 break
                             else:
-                                for dic in lista:
-                                    nombre_escogido=dic.pop(server_escogido)
-                                    print(f"Server escogido {nombre_escogido}")
-                                server_linux_cluster.append(nombre_escogido)
-                            zona = {nombre_zona: {server_linux_cluster}}
-                            print(zona)
+                                servers = server_escogido.split(',')
+                                print(servers)
+                                for server in servers:
+                                    for dic in lista:
+                                        nombre_escogido=dic.pop(int(server))
+                                        print(f"Server escogido: {nombre_escogido}")
+                                        server_linux_cluster.append(nombre_escogido)
+                        zona = {nombre_zona: {server_linux_cluster}}
+                        print(f"zona {zona}")
                     elif tipo_zona == 2:
                         server_openstack = []
                         while True:
-                            server_escogido,lista = o.def_zona_disponibilidad_menu3()
-                            #print("Data enviada a BD \nID de servidor = ", int(server_escogido)+10)
+                            lista,server_escogido = o.def_zona_disponibilidad_menu3()
                             if server_escogido == "exit":
                                 print("**************************************")
                                 print("Se registró su zona de disponibilidad", nombre_zona, " de tipo Openstack en los servidores",
@@ -562,11 +590,11 @@ class UserInterface:
                                 break
                             else:
                                 for dic in lista:
-                                    nombre_escogido=dic.pop(server_escogido)
+                                    nombre_escogido=dic.pop(int(server_escogido))
                                     print(f"Server escogido {nombre_escogido}")
                                 server_openstack.append(nombre_escogido)
-                            zona = {nombre_zona: {server_linux_cluster}}
-                            print(zona)
+                            zona = {nombre_zona: {server_openstack}}
+                            print(f"zona {zona}")
                     else:
                         break
                 elif option == 5:

@@ -6,7 +6,7 @@ class Conexion:
         pass
 
     def conectar(self):
-        ip="10.20.12.135"
+        ip="10.20.12.35"
         username="grupo1_final"
         paswd="grupo1_final"
         database="bd_general"
