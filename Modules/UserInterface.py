@@ -575,10 +575,9 @@ class UserInterface:
                     tipo_zona = int(tipo_zona)
                     if tipo_zona == 1:
                         server_linux_cluster = []
-                        #while True:
                         lista,server_escogido = o.def_zona_disponibilidad_menu3()
                         if server_escogido == "exit":
-                            print("Se registró su zona de disponibilidad" , nombre_zona, " de tipo Linux cluster en los servidores", server_linux_cluster)
+                            #print("Se registró su zona de disponibilidad" , nombre_zona, " de tipo Linux cluster en los servidores", server_linux_cluster)
                             break
                         else:
                             servers = server_escogido.split(',')
@@ -593,21 +592,21 @@ class UserInterface:
                         o.def_register_zona(zona)
                     elif tipo_zona == 2:
                         server_openstack = []
-                        while True:
-                            lista,server_escogido = o.def_zona_disponibilidad_menu3()
-                            if server_escogido == "exit":
-                                print("**************************************")
-                                print("Se registró su zona de disponibilidad", nombre_zona, " de tipo Openstack en los servidores",
-                                      server_openstack)
-                                print("**************************************")
-                                break
-                            else:
+                        lista, server_escogido = o.def_zona_disponibilidad_menu3()
+                        if server_escogido == "exit":
+                            # print("Se registró su zona de disponibilidad" , nombre_zona, " de tipo Linux cluster en los servidores", server_linux_cluster)
+                            break
+                        else:
+                            servers = server_escogido.split(',')
+                            for server in servers:
                                 for dic in lista:
-                                    nombre_escogido=dic.pop(int(server_escogido))
-                                    print(f"Server escogido {nombre_escogido}")
-                                server_openstack.append(nombre_escogido)
-                            zona = {nombre_zona: {server_openstack}}
-                            print(f"zona {zona}")
+                                    nombre_escogido = dic.get(int(server))
+                                    if nombre_escogido is not None:
+                                        print(f"Server escogido: {nombre_escogido}")
+                                        server_openstack.append(nombre_escogido)
+                        zona = [nombre_zona, server_openstack]
+                        # print(f"Zona: {zona}")
+                        o.def_register_zona(zona)
                     else:
                         break
                 elif option == 5:
