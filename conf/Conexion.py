@@ -43,7 +43,8 @@ class Conexion:
         try:
             with con.cursor() as cur:
                 #valores separados por comas (,)
-                cur.execute("Update "+tabla+" set "+valores+"where "+condicion)
+                print("Update "+tabla+" set "+valores+" where "+condicion)
+                cur.execute("Update "+tabla+" set "+valores+" where "+condicion)
                 con.commit()
         finally:
             con.close()
