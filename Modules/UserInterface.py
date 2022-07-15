@@ -85,18 +85,30 @@ class UserInterface:
     def def_listar_menu1():
         print('*********************************')
         conn = Conexion()
-        zonas = conn.Select("nombre","zona_disponibilidad","-1")
-        print('Seleccione una zona de disponibilidad:')
-        print('Lista de zonas de disponibilidad:')
+        slices = conn.Select("nombre","slice","-1")
+        print('Ingrese el número del slice si desea verlo ocn mayor detalle:')
+        print('Lista de slices:')
         i=0
         lista=[]
-        for zona in zonas:
+        for nombre in slices:
             i=i+1
-            print(f"{i}. Zona: {zona[0]}")
-            dic = {i: zona[0]}
+            print(f"{i}. Zona: {nombre[0]}")
+            dic = {i: nombre[0]}
             lista.append(dic)
         print("Escriba 'exit' para salir del menú")
         return lista,input('Opción: ')
+
+    @staticmethod
+    def detalle_slice(slice):
+        print("")
+        conn = Conexion()
+        info_vm = conn.Select("nombre,recursos_id_estado","vm",f"topologia_id_topologia={slice}")
+        for vm in info_vm:
+            #print(f"Nombre VM: {info_vm[0]}")
+            recursos = conn.Select("ram,vcpu,storage","recursos",f"id_recursos={info_vm[1]}")
+            ram = int(recursos[0][0]) / 1000000
+            disco = int(recursos[0][2]) / 1000000
+            print(f"VM: {info_vm[0]} - Capacidad: RAM:{str(ram)} MB CPU:{recursos[0][1]} DISCO:{str(disco)} MB")
 
     @staticmethod
     def def_listar_menu2(zona):
@@ -552,23 +564,15 @@ class UserInterface:
                                         print("***********************************")
                 elif option == 2:
                     while True:
-                        lista,zona_escogida = o.def_listar_menu1()
-                        if zona_escogida == "exit":
+                        lista,slice_escogido = o.def_listar_menu1()
+                        if slice_escogido == "exit":
                             break
                         else:
-                            while True:
-                                for dic in lista:
-                                    nombre_escogido = dic.pop(int(zona_escogida))
-                                    print(f"Zona escogida: {nombre_escogido}")
+                            for dic in lista:
+                                nombre_escogido = dic.pop(int(slice_escogido))
+                                print(f"Slice escogido: {nombre_escogido}")
+                            o.detalle_slice(nombre_escogido)
 
-                                slice_escogido = o.def_listar_menu2()
-                                if slice_escogido == "exit":
-                                    break
-                                else:
-                                    print("***********************************")
-                                    print("Detalle del slice", slice_escogido, "en la zona ", nombre_zona_escogida)
-                                    print("RAM: 8GB   CPU: 4  #DISCO: 10GB ")
-                                    print("***********************************")
                 elif option == 4:
                     nombre_zona = o.def_zona_disponibilidad_menu()
                     tipo_zona = o.def_zona_disponibilidad_menu2()
