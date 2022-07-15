@@ -48,6 +48,17 @@ class Conexion:
                 con.commit()
         finally:
             con.close()
+
+    def Delete(self,tabla,condicion):
+        con=self.conectar()
+        try:
+            with con.cursor() as cur:
+                #valores separados por comas (,)
+                cur.execute("Delete from "+tabla+" where "+condicion)
+                con.commit()
+        finally:
+            con.close()
+
     def Consult(self,query):
         con=self.conectar()
         resultado=0

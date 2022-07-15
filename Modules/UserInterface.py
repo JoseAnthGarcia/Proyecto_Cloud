@@ -86,7 +86,7 @@ class UserInterface:
         print('*********************************')
         conn = Conexion()
         slices = conn.Select("nombre","slice","-1")
-        print('Ingrese el número del slice si desea verlo ocn mayor detalle:')
+        print('Ingrese el número del slice si desea verlo con mayor detalle:')
         print('Lista de slices:')
         i=0
         lista=[]
@@ -133,6 +133,7 @@ class UserInterface:
         print('¿Está seguro que desea borrar el slice?', nombre)
         print('1. SI')
         print('2. NO')
+        print("Escriba 'exit' para salir del menú")
         return input('Opción: ')
 
 
@@ -140,27 +141,27 @@ class UserInterface:
     @staticmethod
     def def_borrar_menu1():
         print('*********************************')
-        print('Seleccione una zona de disponibilidad:')
-        print('Lista de zonas de disponibilidad:')
-        print('1. Zona 1')
-        print('2. Zona 2')
-        print('3. Zona 3')
-        print('4. Zona 4')
-        print('5. Zona 5')
+        conn = Conexion()
+        slices = conn.Select("nombre", "slice", "-1")
+        print('Ingrese el número del slice si desea borrarlo:')
+        print('Lista de slices:')
+        i = 0
+        lista = []
+        for nombre in slices:
+            i = i + 1
+            print(f"{i}. Zona: {nombre[0]}")
+            dic = {i: nombre[0]}
+            lista.append(dic)
         print("Escriba 'exit' para salir del menú")
-        return input('Opción: ')
+        return lista, input('Opción: ')
 
     @staticmethod
-    def def_borrar_menu2():
+    def def_borrar_menu2(slice):
         print('*********************************')
-        print('Seleccione el slice que desea borrar:')
-        print('Lista de slices:')
-        print('1. Slice 1')
-        print('2. Slice 2')
-        print('3. Slice 3')
-        print('4. Slice 4')
-        print('5. Slice 5')
-        print("Escriba 'exit' para salir del menú")
+        conn = Conexion()
+        id = conn.Select("id_slice","slice",f" nombre = {slice}")
+        conn.Delete("vm",f" topologia_id_topologia = {id[0]}")
+        conn.Delete("slice",f" nombre = {slice}")
         return input('Opción: ')
 
     @staticmethod
@@ -543,25 +544,29 @@ class UserInterface:
                             break
                 elif option == 3:
                     while True:
-                        nombre_zona_escogida = o.def_borrar_menu1()
-                        if nombre_zona_escogida == "exit":
+                        lista,slice_escogido = o.def_borrar_menu1()
+                        if slice_escogido == "exit":
                             break
                         else:
-                            while True:
-                                slice_escogido = o.def_borrar_menu2()
-                                if slice_escogido == "exit":
-                                    break
-                                else:
-                                    confirma_borrado = o.def_borrar_menu3(slice_escogido)
-                                    if int(confirma_borrado) == 2:
-                                        print("***********************************")
-                                        print("No se borró nada")
-                                        print("***********************************")
-                                    elif int(confirma_borrado) == 1:
-                                        print("***********************************")
-                                        print("Data enviada a BD \nID de slice = ", 14)
-                                        print("Se borró el slice ", slice_escogido)
-                                        print("***********************************")
+                            for dic in lista:
+                                slice = dic.pop(int(slice_escogido))
+                            print(f"El slice que borrará es: {slice}")
+                            confirma_borrado = o.def_borrar_menu3(slice_escogido)
+                            if confirma_borrado == "exit":
+                                break
+                            else:
+                                if int(confirma_borrado) == 2:
+                                    print("***********************************")
+                                    print("No se borró nada")
+                                    print("***********************************")
+                                elif int(confirma_borrado) == 1:
+                                    #o.def_borrar_menu2(slice)
+                                    print("***********************************")
+                                    #print("Data enviada a Administrador de slice = ")
+                                    sa= SliceAdministrator()
+                                    message = sa.delete_slice(slice)
+                                    print(message)
+                                    print("***********************************")
                 elif option == 2:
                     while True:
                         lista,slice_escogido = o.def_listar_menu1()
