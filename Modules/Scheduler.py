@@ -78,12 +78,12 @@ def ordenamiento_coeficiente(lista_worker_general_filtrada,vm):
     for par in lista_worker_coeficiente:
         lista_worker_ordenada.append(lista_worker_general_filtrada[par[1]])
         new_list.append(f"worker_{lista_worker_general_filtrada[par[1]].id_servidor}")
-    print(f"** Orden de prioridad: {new_list} ==> {new_list[0]} es el tentativo servidor físico")
-    print("-- Evaluacion de recursos: ")
+    # print(f"** Orden de prioridad: {new_list} ==> {new_list[0]} es el tentativo servidor físico")
+    # print("-- Evaluacion de recursos: ")
     contador1 = 0
-    print(f"Se necesita {vm.ram_requerida} de RAM, {vm.disco_requerido} de disco y {vm.vcpu_requeridas} vcpus")
+    # print(f"Se necesita {vm.ram_requerida} de RAM, {vm.disco_requerido} de disco y {vm.vcpu_requeridas} vcpus")
     for worker in lista_worker_ordenada:
-        print(f"Worker {worker.id_servidor} tiene de {worker.ram_disponible} RAM, {worker.disco_disponible} de disco y {worker.vcpu_disponible} vcpus")
+        # print(f"Worker {worker.id_servidor} tiene de {worker.ram_disponible} RAM, {worker.disco_disponible} de disco y {worker.vcpu_disponible} vcpus")
         if (worker.ram_disponible >= vm.ram_requerida and worker.disco_disponible >= vm.disco_requerido and worker.vcpu_disponible >= vm.vcpu_requeridas):
             worker_elegido = worker
             worker_nuevo = worker_elegido
@@ -95,12 +95,12 @@ def ordenamiento_coeficiente(lista_worker_general_filtrada,vm):
             worker_nuevo.vcpu_disponible=vcpu_total_new
             lista_worker_general_filtrada= lista_worker_ordenada
             lista_worker_general_filtrada[contador]=worker_nuevo
-            print(f"Worker {worker.id_servidor} cumple con los recursos solicitados.")
+            # print(f"Worker {worker.id_servidor} cumple con los recursos solicitados.")
             break
         else :
             contador1 += 1
             if (contador1 == len(lista_worker_ordenada)):
-                print("Ningun worker cumple con los recursos solicitados.")
+                # print("Ningun worker cumple con los recursos solicitados.")
                 worker_elegido = None
         contador= contador+1
     return worker_elegido
@@ -108,7 +108,7 @@ def ordenamiento_coeficiente(lista_worker_general_filtrada,vm):
 
 def scheduler_main(data, FACTOR):
     #Actualizamos los valores en base de datos: mas adelante esto lo hara el validador
-    x = requests.get('http://10.20.12.58:8081/cpu-metrics')
+    # x = requests.get('http://10.20.12.58:8081/cpu-metrics')
     #VCPU-RAM-STORAGE
     lista_vm_topologia=[]
     nodos=data['nodos']
@@ -122,10 +122,10 @@ def scheduler_main(data, FACTOR):
 
     zona_disponibilidad= data['zona']['nombre']
     lista_worker_general_filtrada=filtrado(zona_disponibilidad, FACTOR)
-    print("** Los workers filtrados por zona de disponibilidad son:")
-    for worker in lista_worker_general_filtrada:
-        print(f"- Worker {worker.id_servidor}")
-    print("---------------------------------------------------")
+    # print("** Los workers filtrados por zona de disponibilidad son:")
+    # for worker in lista_worker_general_filtrada:
+    #     print(f"- Worker {worker.id_servidor}")
+    # print("---------------------------------------------------")
     
     result = True
     for vm in lista_vm_topologia:
@@ -135,7 +135,7 @@ def scheduler_main(data, FACTOR):
             break
         else:
             data["nodos"][vm.nodo_nombre]["id_worker"] = worker_elegido.id_servidor
-            print(data)
-            print("---------------------------------------------------")
+            # print(data)
+            # print("---------------------------------------------------")
 
     return data, result

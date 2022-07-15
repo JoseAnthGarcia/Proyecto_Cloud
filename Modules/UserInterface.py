@@ -4,6 +4,7 @@ from Modules.UserInterface import *
 import json
 import os
 from conf.Conexion import *
+import logging
 
 class UserInterface:
     def __init__(self):
@@ -485,6 +486,7 @@ class UserInterface:
                                     slice["ultimo_nodo"] = prox_node-1
                                     print("------Data a enviar-----")
                                     print(slice)
+                                    print("------------------------")
                                     o.save_changes(slice, from_scratch)
                                     pass
                                 elif int(opt) == 8:
@@ -576,7 +578,7 @@ class UserInterface:
                     print("Opción no válida")
 
             except Exception as e:
-                print(e)
+                logging.exception(e)
 
     @staticmethod
     def create_topology(grafo):
