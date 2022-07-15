@@ -2,6 +2,7 @@
 import random
 import secrets as s
 import requests
+from conf.Conexion import *
 
 def generador_mac():
     return "02:%02x:%02x:%02x:%02x:%02x" % (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -13,9 +14,14 @@ def generar_vm_nombre(nodos):
     return vm_nombres
 
 def linux_driver_main(slice):
-
+    conn = Conexion()
+    # VLAN ID actually ranges from 1 to 4094
+    vlan_id = 1
+    maxvlan = conn.GetMaxVlan()
     #TODO: COMPLETAR
+    
     nombre_slice = slice["nombre"]
+    conn.Insert("slice", "nombre,tipo,vlan_id,fecha_creacion,fecha_modificacion", f"{nombre_slice},linux_cluster, {}")
     vm_nombres = generar_vm_nombre(slice["nodos"])
     vnc_port = 1
     for nodo_key in slice["nodos"]:
@@ -31,8 +37,6 @@ def linux_driver_main(slice):
         for i in range(len(nodo["enlaces"])):
             enlaces.append(vm_nombres[nodo["enlaces"][i]])
         imagen = nodo["config"]["imagen"]
-        # VLAN ID actually ranges from 1 to 4094
-        vlan_id = 1
         vm_worker_id = nodo["id_worker"]
         enlaces = ",".join(enlaces)
         data = {"vm_nombre": vm_nombre,

@@ -69,3 +69,14 @@ class Conexion:
         finally:
             con.close()
         return resultado
+
+    def GetMaxVlan(self):
+        con=self.conectar()
+        try:
+            with con.cursor() as cur:
+                sql = "select max(vlan_id) as max_vlan from slice"
+                cur.execute(sql)
+                rows = cur.fetchall()
+                return rows
+        finally:
+            con.close()

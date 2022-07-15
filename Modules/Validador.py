@@ -74,6 +74,6 @@ class Validador:
             validador.registerData(server_names[i])
 
 
-validador = Validador()
-server_names = ["headnode","worker1,worker2"]
-validador.registerAllData(server_names)
+# validador = Validador()
+# server_names = ["headnode","worker1,worker2"]
+# validador.registerAllData(server_names)
