@@ -6,7 +6,7 @@ class Conexion:
         pass
 
     def conectar(self):
-        ip="10.20.12.135"
+        ip="10.20.12.35"
         username="grupo1_final"
         paswd="grupo1_final"
         database="bd_general"
@@ -43,10 +43,22 @@ class Conexion:
         try:
             with con.cursor() as cur:
                 #valores separados por comas (,)
-                cur.execute("Update "+tabla+" set "+valores+"where "+condicion)
+                print("Update "+tabla+" set "+valores+" where "+condicion)
+                cur.execute("Update "+tabla+" set "+valores+" where "+condicion)
                 con.commit()
         finally:
             con.close()
+
+    def Delete(self,tabla,condicion):
+        con=self.conectar()
+        try:
+            with con.cursor() as cur:
+                #valores separados por comas (,)
+                cur.execute("Delete from "+tabla+" where "+condicion)
+                con.commit()
+        finally:
+            con.close()
+
     def Consult(self,query):
         con=self.conectar()
         resultado=0
