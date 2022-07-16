@@ -53,8 +53,8 @@ class UserInterface:
     def def_zona_disponibilidad_menu3():
         print('*********************************')
         conn = Conexion()
-        #server = conn.Select("nombre", "servidor","id_zona < 0")
-        server = conn.Select("nombre", "servidor", "-1")
+        server = conn.Select("nombre", "servidor","id_zona < 0")
+        #server = conn.Select("nombre", "servidor", "-1")
         i=0
         lista=[]
         if len(server) == 0:
