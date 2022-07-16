@@ -101,15 +101,18 @@ class UserInterface:
 
     @staticmethod
     def detalle_slice(slice):
-        print("")
+        print("******************************")
         conn = Conexion()
-        info_vm = conn.Select("nombre,recursos_id_estado","vm",f"topologia_id_topologia={slice}")
+        id=conn.Select("id_slice","slice",f"nombre='{slice}'")
+        id=id[0]
+        info_vm = conn.Select("nombre,recursos_id_estado,vnc","vm",f"topologia_id_topologia='{id[0]}'")
         for vm in info_vm:
             #print(f"Nombre VM: {info_vm[0]}")
-            recursos = conn.Select("ram,vcpu,storage","recursos",f"id_recursos={info_vm[1]}")
-            ram = int(recursos[0][0]) / 1000000
-            disco = int(recursos[0][2]) / 1000000
-            print(f"VM: {info_vm[0]} - Capacidad: RAM:{str(ram)} MB CPU:{recursos[0][1]} DISCO:{str(disco)} MB")
+            recursos = conn.Select("ram,vcpu,storage","recursos",f"id_recursos={vm[1]}")
+            ram = int(recursos[0][0]) #/ 1000000
+            disco = int(recursos[0][2]) #/ 1000000
+            vnc_port=5900+vm[2]
+            print(f"VM: {vm[0]} - Capacidad: RAM:{str(ram)} MB CPU:{recursos[0][1]} DISCO:{str(disco)} GB - VNC_PORT: {vnc_port}")
 
     @staticmethod
     def def_listar_menu2(zona):
@@ -687,9 +690,12 @@ class UserInterface:
                         if slice_escogido == "exit":
                             break
                         else:
+                            nombre_slice = ""
                             for dic in lista:
-                                slice = dic.pop(int(slice_escogido))
-                            print(f"El slice que borrará es: {slice}")
+                                slice = dic.get(int(slice_escogido))
+                                if slice is not None:
+                                    print(f"El slice que borrará es: {slice}")
+                                    nombre_slice = slice
                             confirma_borrado = o.def_borrar_menu3(slice_escogido)
                             if confirma_borrado == "exit":
                                 break
@@ -703,7 +709,7 @@ class UserInterface:
                                     print("***********************************")
                                     #print("Data enviada a Administrador de slice = ")
                                     sa= SliceAdministrator()
-                                    message = sa.delete_slice(slice)
+                                    message = sa.delete_slice(nombre_slice)
                                     print(message)
                                     print("***********************************")
                 elif option == 2:
@@ -713,9 +719,10 @@ class UserInterface:
                             break
                         else:
                             for dic in lista:
-                                nombre_escogido = dic.pop(int(slice_escogido))
-                                print(f"Slice escogido: {nombre_escogido}")
-                            o.detalle_slice(nombre_escogido)
+                                nombre_escogido = dic.get(int(slice_escogido))
+                                if nombre_escogido is not None:
+                                    print(f"Slice escogido: {nombre_escogido}")
+                                    o.detalle_slice(nombre_escogido)
 
                 elif option == 4:
                     nombre_zona = o.def_zona_disponibilidad_menu()

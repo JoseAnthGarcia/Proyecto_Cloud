@@ -27,7 +27,8 @@ class Validador:
     def validar_estado_vm(delf, vm):
         con = Conexion()
         estado_vm = con.Select("estado","vm",f"nombre = '{vm}'")
-        return estado_vm
+        estado_vm=estado_vm[0]
+        return estado_vm[0]
 
     def registrarDataCadaMinuto(self):
         conn = Conexion()
