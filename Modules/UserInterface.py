@@ -632,10 +632,13 @@ class UserInterface:
                                         opcion = input("Escoga la opción:")
                                         if int(opcion) == 1:
                                             slice["estado"] = "guardado"
+                                            sa.save_slice(slice)
                                         elif int(opcion) == 2:
                                             slice["estado"] = "ejecutado"
+                                            sa.create_slice(slice)
                                     elif slice["estado"] == "ejecutado":
                                         print(f"* Actualizando el slice {slice['nombre']}")
+                                        sa.update_slice(slice)
                                     print("------------------------")
                                     o.save_changes(slice, from_scratch)
                                     pass
