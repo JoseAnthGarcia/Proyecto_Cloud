@@ -11,7 +11,8 @@ class SliceAdministrator:
         FACTOR = 2
         slice, result = scheduler_main(grafo, FACTOR)
         if result:
-            result = linux_driver_main(slice)
+            nuevo_slice = linux_driver_main(slice)
+            return nuevo_slice
         else:
             return False
 

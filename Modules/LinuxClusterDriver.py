@@ -77,6 +77,8 @@ def linux_driver_main(slice):
         else:
             print("Falló la creación de la vm "+ data["vm_nombre"])
         vnc_port += 1
+    slice["mapeo_nombres"] = vm_nombres
+    return slice
     
 def borrar_nodo(slice):
     #Código de avance en prueba4.py
