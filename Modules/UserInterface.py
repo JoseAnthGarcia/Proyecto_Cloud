@@ -734,4 +734,5 @@ class UserInterface:
     @staticmethod
     def create_topology(grafo):
         sliceAdministrator = SliceAdministrator()
-        result = sliceAdministrator.create_topology(grafo)
+        nuevo_slice = sliceAdministrator.create_topology(grafo)
+        UserInterface.save_changes(nuevo_slice, False)
