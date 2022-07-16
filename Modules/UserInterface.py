@@ -38,9 +38,16 @@ class UserInterface:
     @staticmethod
     def listar_slices(tipo):
         conn = Conexion()
-        server = conn.Select("nombre,id_", "slice",f"tipo = '{tipo}' ")
+        server = conn.Select("nombre,id_slice", "slice",f"tipo = '{tipo}' ")
+        i=0
+        lista=[]
         for nombre in server:
-            print(f"Slice: {nombre[0]}")
+            i=i+1
+            print(f"{i}. Slice: {nombre[0]}")
+            dic = {i: nombre[0]}
+            lista.append(dic)
+        return lista
+
 
     @staticmethod
     def def_zona_disponibilidad_menu3():
@@ -382,7 +389,8 @@ class UserInterface:
                                 from_scratch = True # Es verdadero si se inicia desde cero la creacion del slice
                             else:
                                 print("*********************************")
-                                o.listar_slices("linux_cluster")
+                                #lista1 = o.listar_slices("linux_cluster")
+                                #lista2 = o.listar_slices("openstack")
                                 print("*********************************")
                                 files = os.listdir('./Modules/Slices')
                                 i = 0
@@ -503,15 +511,16 @@ class UserInterface:
                                             print("***************************************")
                                             lista,flavor_escogido=o.lista_flavors()
                                             for dic in lista:
-                                                flavor = dic.pop(int(flavor_escogido))
-                                            print(f"El flavor que configurará es: {flavor}")
-                                            info_config = [flavor]
+                                                flavor = dic.get(int(flavor_escogido))
+                                                if flavor is not None:
+                                                    print(f"El flavor que configurará es: {flavor}")
+                                                    info_config = [flavor]
                                             for nodo in nodos:
                                                 type = {"type": "flavor", "info_config": info_config}
                                                 slice["nodos"][nodo]["config"] = type
                                             print("***************************************")
                                             print("1. Seleccionar la imagen desde una lista:")
-                                            print("1. Importar una imagen (ingresando un link):")
+                                            print("2. Importar una imagen (ingresando un link):")
                                             opcion = input("Seleccione:")
                                             if int(opcion) == 1:
                                                 print("***************************************")
@@ -519,7 +528,8 @@ class UserInterface:
 
                                                 for dic in lista:
                                                     imagen = dic.pop(int(imagen_escogida))
-                                                print(f"La imagen que configurará es: {imagen}")
+                                                    if imagen is not None:
+                                                        print(f"La imagen que configurará es: {imagen}")
                                                 #info_config = [imagen]
                                                 for nodo in nodos:
                                                     #type = {"imagen": info_config}
@@ -530,7 +540,7 @@ class UserInterface:
                                                 link = input("Ingrese un link:")
                                                 slice["nodos"][nodo]["config"]["imagen"] = link
                                                 imagen = f"desde {link}"
-                                            print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor} e imagen: {imagen}")
+                                            print(f"Se configuró los siguientes nodos {nodos} con flavor: {info_config[0]} e imagen: {imagen}")
 
                                         elif int(conf_nodos_mode2) == 2:
                                             cpu = input("Indicar el # de CPUs:")
@@ -543,7 +553,7 @@ class UserInterface:
                                                 slice["nodos"][nodo]["config"] = type
                                             print("***************************************")
                                             print("1. Seleccionar la imagen desde una lista:")
-                                            print("1. Importar una imagen (ingresando un link):")
+                                            print("2. Importar una imagen (ingresando un link):")
                                             opcion = input("Seleccione:")
                                             if int(opcion) == 1:
                                                 print("***************************************")
@@ -551,7 +561,8 @@ class UserInterface:
 
                                                 for dic in lista:
                                                     imagen = dic.pop(int(imagen_escogida))
-                                                print(f"La imagen que configurará es: {imagen}")
+                                                    if imagen is not None:
+                                                        print(f"La imagen que configurará es: {imagen}")
                                                 # info_config = [imagen]
                                                 for nodo in nodos:
                                                     # type = {"imagen": info_config}
@@ -591,15 +602,16 @@ class UserInterface:
                                             elif int(conf_nodos_mode2) == 1:
                                                 lista, flavor_escogido = o.lista_flavors()
                                                 for dic in lista:
-                                                    flavor = dic.pop(int(flavor_escogido))
-                                                print(f"El flavor que configurará es: {flavor}")
-                                                info_config = [flavor]
+                                                    flavor = dic.get(int(flavor_escogido))
+                                                    if flavor is not None:
+                                                        print(f"El flavor que configurará es: {flavor}")
+                                                        info_config = [flavor]
                                                 for nodo in nodos:
                                                     type = {"type": "flavor", "info_config": info_config}
                                                     slice["nodos"][nodo]["config"] = type
                                                 print("***************************************")
                                                 print("1. Seleccionar la imagen desde una lista:")
-                                                print("1. Importar una imagen (ingresando un link):")
+                                                print("2. Importar una imagen (ingresando un link):")
                                                 opcion = input("Seleccione:")
                                                 if int(opcion) == 1:
                                                     print("***************************************")
@@ -607,7 +619,8 @@ class UserInterface:
 
                                                     for dic in lista:
                                                         imagen = dic.pop(int(imagen_escogida))
-                                                    print(f"La imagen que configurará es: {imagen}")
+                                                        if imagen is not None:
+                                                            print(f"La imagen que configurará es: {imagen}")
                                                     # info_config = [imagen]
                                                     for nodo in nodos:
                                                         # type = {"imagen": info_config}
@@ -619,7 +632,7 @@ class UserInterface:
                                                     link = input("Ingrese un link:")
                                                     slice["nodos"][nodo]["config"]["imagen"] = link
                                                     imagen = f"desde {link}"
-                                                print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor} e imagen: {imagen}")
+                                                print(f"Se configuró los siguientes nodos {nodos} con flavor: {info_config[0]} e imagen: {imagen}")
                                             elif int(conf_nodos_mode2) == 2:
                                                 cpu = input("Indicar el # de CPUs:")
                                                 ram = input("Indicar la capacidad de la memoria RAM en GB:")
@@ -631,7 +644,7 @@ class UserInterface:
                                                     slice["nodos"][nodo]["config"] = type
                                                 print("***************************************")
                                                 print("1. Seleccionar la imagen desde una lista:")
-                                                print("1. Importar una imagen (ingresando un link):")
+                                                print("2. Importar una imagen (ingresando un link):")
                                                 opcion = input("Seleccione:")
                                                 if int(opcion) == 1:
                                                     print("***************************************")
@@ -639,7 +652,8 @@ class UserInterface:
 
                                                     for dic in lista:
                                                         imagen = dic.pop(int(imagen_escogida))
-                                                    print(f"La imagen que configurará es: {imagen}")
+                                                        if imagen is not None:
+                                                            print(f"La imagen que configurará es: {imagen}")
                                                     # info_config = [imagen]
                                                     for nodo in nodos:
                                                         # type = {"imagen": info_config}
