@@ -44,3 +44,11 @@ class SliceAdministrator:
     def update_slice(self, slice):
         #llamar a driver para actualizar
         pass
+
+    def save_slice(self, slice):
+        #llamar a driver para actualizar
+        pass
+
+    def create_slice(self, slice):
+        #llamar a driver para actualizar
+        pass

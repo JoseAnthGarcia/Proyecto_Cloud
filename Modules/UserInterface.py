@@ -267,7 +267,10 @@ class UserInterface:
             print("Opción no válida")
         prox_node = last_node+1
         slice["nodos"].update(sub_grafo) # Agrega los nuevos valores de sub_grafo al diccionario slice.
+        for nodo in slice["nodos"]:
+            slice["nodos"][nodo]["instanciado"] = False
         print(f"* Subgrafo del tipo {sub_topologies[int(topo_type)-1]} agregado.")
+
         return slice, prox_node
 
     @staticmethod
@@ -372,8 +375,12 @@ class UserInterface:
                                 slice_name = input("Nombre del slice: ")
                                 slice["nombre"] = slice_name
                                 print(f"* Slice {slice_name} creado.")
+                                slice["estado"] = "guardado"
                                 from_scratch = True # Es verdadero si se inicia desde cero la creacion del slice
                             else:
+                                print("*********************************")
+                                o.listar_slices("linux_cluster")
+                                print("*********************************")
                                 files = os.listdir('./Modules/Slices')
                                 i = 0
                                 for file_name in files:
@@ -391,6 +398,7 @@ class UserInterface:
                                     break
                                 elif int(opt) == 1:
                                     slice["nodos"][f"n{prox_node}"] = {"enlaces":[]}
+                                    slice["nodos"][f"n{prox_node}"]["instanciado"] = False
                                     print(f"* Nodo n{prox_node} agregado.")
                                     prox_node += 1
                                     pass
@@ -414,49 +422,60 @@ class UserInterface:
                                             slice["nodos"][nodos[1]]["enlaces"].append(nodos[0])
                                             print(f"* Enlace {link} creado.")
                                 elif int(opt) == 4:
-                                    nodos_dict = slice["nodos"]
-                                    i = 1
-                                    for node_name in nodos_dict.keys():
-                                        print(f"- {node_name}")
-                                        i += 1
-                                    node_opt = input("Indicar nodo que desea borrar: ")
-                                    for node_name in slice["nodos"].keys():
-                                        enlaces = slice["nodos"][node_name]["enlaces"]
-                                        if node_opt in enlaces:
-                                            slice["nodos"][node_name]["enlaces"].remove(node_opt)
-                                    del slice["nodos"][node_opt]
-                                    print(f"* Nodo {node_opt} borrado del slice {slice['nombre']}.")
-                                    
+                                    if slice["estado"] == "guardado":
+                                        nodos_dict = slice["nodos"]
+                                        i = 1
+                                        for node_name in nodos_dict.keys():
+                                            print(f"- {node_name}")
+                                            i += 1
+                                        node_opt = input("Indicar nodo que desea borrar: ")
+                                        for node_name in slice["nodos"].keys():
+                                            enlaces = slice["nodos"][node_name]["enlaces"]
+                                            if node_opt in enlaces:
+                                                slice["nodos"][node_name]["enlaces"].remove(node_opt)
+                                        del slice["nodos"][node_opt]
+                                        print(f"* Nodo {node_opt} borrado del slice {slice['nombre']}.")
+                                    elif slice["estado"] == "ejecutado":
+                                        print("***************************")
+                                        print(f"* No se pueden borrar nodos del slice {slice['nombre']} porque ya está implementado")
+                                        print("***************************")
                                 elif int(opt) == 5:
-                                    nodos_dict = slice["nodos"]
-                                    print(f"- {nodos_dict}")
-                                    i = 1
-                                    enlaces_repe=[]
-                                    for nodo_origin in nodos_dict:
-                                        enlaces_dict=nodos_dict.get(nodo_origin)
-                                        for enlaces_array in enlaces_dict.values():
-                                            for nodo_enlace in enlaces_array:
-                                                if len(enlaces_repe) >0:
-                                                    enlace_par=nodo_origin+"-"+nodo_enlace
-                                                    if (enlace_par in enlaces_repe):
-                                                        print("")
+                                    if slice["estado"] == "guardado":
+                                        nodos_dict = slice["nodos"]
+                                        print(f"- {nodos_dict}")
+                                        i = 1
+                                        enlaces_repe = []
+                                        for nodo_origin in nodos_dict:
+                                            enlaces_dict = nodos_dict.get(nodo_origin)
+                                            for enlaces_array in enlaces_dict.values():
+                                                for nodo_enlace in enlaces_array:
+                                                    if len(enlaces_repe) > 0:
+                                                        enlace_par = nodo_origin + "-" + nodo_enlace
+                                                        if (enlace_par in enlaces_repe):
+                                                            print("")
+                                                        else:
+                                                            print(f"*{nodo_origin}-{nodo_enlace}")
                                                     else:
-                                                       print(f"*{nodo_origin}-{nodo_enlace}")
-                                                else:
-                                                    print(f"*{nodo_origin}-{nodo_enlace}")
-                                                enlace = nodo_origin+"-"+nodo_enlace
-                                                enlace_inv = nodo_enlace + "-" + nodo_origin
-                                                enlaces_repe.append(enlace)
-                                                enlaces_repe.append(enlace_inv)
-                                        i += 1
-                                    enlace_opt = input("Indicar enlace que desea borrar en formato 'n1-n2', escriba 'exit' para terminar: ")
-                                    if enlace_opt == "exit":
-                                        break
-                                    else:
-                                        nodos = enlace_opt.split("-")
-                                        slice["nodos"][nodos[0]]["enlaces"].remove(nodos[1])
-                                        slice["nodos"][nodos[1]]["enlaces"].remove(nodos[0])
-                                        print(f"* Enlace {enlace_opt}borrado.")
+                                                        print(f"*{nodo_origin}-{nodo_enlace}")
+                                                    enlace = nodo_origin + "-" + nodo_enlace
+                                                    enlace_inv = nodo_enlace + "-" + nodo_origin
+                                                    enlaces_repe.append(enlace)
+                                                    enlaces_repe.append(enlace_inv)
+                                            i += 1
+                                        enlace_opt = input(
+                                            "Indicar enlace que desea borrar en formato 'n1-n2', escriba 'exit' para terminar: ")
+                                        if enlace_opt == "exit":
+                                            break
+                                        else:
+                                            nodos = enlace_opt.split("-")
+                                            slice["nodos"][nodos[0]]["enlaces"].remove(nodos[1])
+                                            slice["nodos"][nodos[1]]["enlaces"].remove(nodos[0])
+                                            print(f"* Enlace {enlace_opt} borrado.")
+                                    elif slice["estado"] == "ejecutado":
+                                        print("***************************")
+                                        print(f"* No se pueden borrar enlaces del slice {slice['nombre']} porque ya está implementado")
+                                        print("***************************")
+
                                 elif int(opt) == 6:
                                     conf_nodos_mode = o.def_conf_nodos1()
                                     if conf_nodos_mode == 'exit':
@@ -464,8 +483,14 @@ class UserInterface:
                                     elif int(conf_nodos_mode) == 1:
                                         nodos_dict = slice["nodos"]
                                         nodos_lista = []
-                                        for node_name in nodos_dict.keys():
-                                            nodos_lista.append(node_name)
+                                        if slice["estado"] == "ejecutado":
+                                            print("Se configurará todos los nodos que no se han implementado.")
+                                            for node_name in nodos_dict.keys():
+                                                if slice["nodos"][node_name]["instanciado"] == False:
+                                                    nodos_lista.append(node_name)
+                                        else:
+                                            for node_name in nodos_dict.keys():
+                                                nodos_lista.append(node_name)
                                         nodos=nodos_lista
                                         print(f"Configurará: {nodos_lista}")
                                         conf_nodos_mode2 = o.def_conf_nodos2()
@@ -482,14 +507,26 @@ class UserInterface:
                                                 type = {"type": "flavor", "info_config": info_config}
                                                 slice["nodos"][nodo]["config"] = type
                                             print("***************************************")
-                                            lista,imagen_escogida=o.lista_imagenes()
-                                            for dic in lista:
-                                                imagen = dic.pop(int(imagen_escogida))
-                                            print(f"El flavor que configurará es: {imagen}")
-                                            #info_config = [imagen]
-                                            for nodo in nodos:
-                                                #type = {"imagen": info_config}
-                                                slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                            print("1. Seleccionar la imagen desde una lista:")
+                                            print("1. Importar una imagen (ingresando un link):")
+                                            opcion = input("Seleccione:")
+                                            if int(opcion) == 1:
+                                                print("***************************************")
+                                                lista,imagen_escogida=o.lista_imagenes()
+
+                                                for dic in lista:
+                                                    imagen = dic.pop(int(imagen_escogida))
+                                                print(f"La imagen que configurará es: {imagen}")
+                                                #info_config = [imagen]
+                                                for nodo in nodos:
+                                                    #type = {"imagen": info_config}
+                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                            elif int(opcion) == 2:
+                                                print("***************************************")
+                                                print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
+                                                link = input("Ingrese un link:")
+                                                slice["nodos"][nodo]["config"]["imagen"] = link
+                                                imagen = f"desde {link}"
                                             print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor} e imagen: {imagen}")
 
                                         elif int(conf_nodos_mode2) == 2:
@@ -502,23 +539,43 @@ class UserInterface:
                                                 type = {"type": "manual", "info_config": info_config}
                                                 slice["nodos"][nodo]["config"] = type
                                             print("***************************************")
-                                            lista, imagen_escogida = o.lista_imagenes()
-                                            for dic in lista:
-                                                imagen = dic.pop(int(imagen_escogida))
-                                            print(f"El flavor que configurará es: {imagen}")
-                                            #info_config = [imagen]
-                                            for nodo in nodos:
-                                                slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                            print("1. Seleccionar la imagen desde una lista:")
+                                            print("1. Importar una imagen (ingresando un link):")
+                                            opcion = input("Seleccione:")
+                                            if int(opcion) == 1:
+                                                print("***************************************")
+                                                lista, imagen_escogida = o.lista_imagenes()
+
+                                                for dic in lista:
+                                                    imagen = dic.pop(int(imagen_escogida))
+                                                print(f"La imagen que configurará es: {imagen}")
+                                                # info_config = [imagen]
+                                                for nodo in nodos:
+                                                    # type = {"imagen": info_config}
+                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                            elif int(opcion) == 2:
+                                                print("***************************************")
+                                                print(
+                                                    "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
+                                                link = input("Ingrese un link:")
+                                                slice["nodos"][nodo]["config"]["imagen"] = link
+                                                imagen = f"desde {link}"
                                             print(f"Se configuró los siguientes nodos {nodos} con:")
                                             print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen}")
                                         else:
                                             print("Opción no válida")
                                     elif int(conf_nodos_mode) == 2:
+
                                         nodos_dict = slice["nodos"]
-                                        i = 1
-                                        for node_name in nodos_dict.keys():
-                                            print(f"- {node_name}")
-                                            i += 1
+                                        if slice["estado"] == "ejecutado":
+                                            print("Se configurará todos los nodos que no se han implementado.")
+                                            for node_name in nodos_dict.keys():
+                                                if slice["nodos"][node_name]["instanciado"] == False:
+                                                    print(f"- {node_name}")
+                                        else:
+                                            for node_name in nodos_dict.keys():
+                                                print(f"- {node_name}")
+
                                         enlace_opt = input("Indicar nodos que desea borrar en formato 'n1,n2,n3,etc', escriba 'exit' para terminar: ")
                                         if enlace_opt == "exit":
                                             break
@@ -538,14 +595,27 @@ class UserInterface:
                                                     type = {"type": "flavor", "info_config": info_config}
                                                     slice["nodos"][nodo]["config"] = type
                                                 print("***************************************")
-                                                lista, imagen_escogida = o.lista_imagenes()
-                                                for dic in lista:
-                                                    imagen = dic.pop(int(imagen_escogida))
-                                                print(f"El flavor que configurará es: {imagen}")
-                                                #info_config = [imagen]
-                                                for nodo in nodos:
-                                                    #type = {"imagen": info_config}
-                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                print("1. Seleccionar la imagen desde una lista:")
+                                                print("1. Importar una imagen (ingresando un link):")
+                                                opcion = input("Seleccione:")
+                                                if int(opcion) == 1:
+                                                    print("***************************************")
+                                                    lista, imagen_escogida = o.lista_imagenes()
+
+                                                    for dic in lista:
+                                                        imagen = dic.pop(int(imagen_escogida))
+                                                    print(f"La imagen que configurará es: {imagen}")
+                                                    # info_config = [imagen]
+                                                    for nodo in nodos:
+                                                        # type = {"imagen": info_config}
+                                                        slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                elif int(opcion) == 2:
+                                                    print("***************************************")
+                                                    print(
+                                                        "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
+                                                    link = input("Ingrese un link:")
+                                                    slice["nodos"][nodo]["config"]["imagen"] = link
+                                                    imagen = f"desde {link}"
                                                 print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor} e imagen: {imagen}")
                                             elif int(conf_nodos_mode2) == 2:
                                                 cpu = input("Indicar el # de CPUs:")
@@ -557,15 +627,26 @@ class UserInterface:
                                                     type = {"type": "manual", "info_config": info_config}
                                                     slice["nodos"][nodo]["config"] = type
                                                 print("***************************************")
-                                                lista, imagen_escogida = o.lista_imagenes()
-                                                for dic in lista:
-                                                    imagen = dic.pop(int(imagen_escogida))
-                                                print(f"El flavor que configurará es: {imagen}")
-                                                #id_imagen = Conexion().Select("id_imagen","imagen",f"nombre = '{imagen}'")
-                                                #id_imagen=id_imagen[0]
-                                                for nodo in nodos:
-                                                    #type = {"imagen": info_config}
-                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                print("1. Seleccionar la imagen desde una lista:")
+                                                print("1. Importar una imagen (ingresando un link):")
+                                                opcion = input("Seleccione:")
+                                                if int(opcion) == 1:
+                                                    print("***************************************")
+                                                    lista, imagen_escogida = o.lista_imagenes()
+
+                                                    for dic in lista:
+                                                        imagen = dic.pop(int(imagen_escogida))
+                                                    print(f"La imagen que configurará es: {imagen}")
+                                                    # info_config = [imagen]
+                                                    for nodo in nodos:
+                                                        # type = {"imagen": info_config}
+                                                        slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                elif int(opcion) == 2:
+                                                    print("***************************************")
+                                                    print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
+                                                    link = input("Ingrese un link:")
+                                                    slice["nodos"][nodo]["config"]["imagen"] = link
+                                                    imagen = f"desde {link}"
                                                 print(f"Se configuró los siguientes nodos {nodos} con:")
                                                 print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen}")
                                             else:
@@ -580,12 +661,16 @@ class UserInterface:
                                         print("1. Guardar como borrardor")
                                         print("2. Implementar el slice")
                                         opcion = input("Escoga la opción:")
+                                        sa = SliceAdministrator()
                                         if int(opcion) == 1:
                                             slice["estado"] = "guardado"
+                                            sa.save_slice(slice)
                                         elif int(opcion) == 2:
                                             slice["estado"] = "ejecutado"
+                                            sa.create_slice(slice)
                                     elif slice["estado"] == "ejecutado":
                                         print(f"* Actualizando el slice {slice['nombre']}")
+                                        sa.update_slice(slice)
                                     print("------------------------")
                                     o.save_changes(slice, from_scratch)
                                     pass
