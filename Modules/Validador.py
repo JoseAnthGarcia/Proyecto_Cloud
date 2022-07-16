@@ -1,10 +1,11 @@
 import requests
 import json
 import pymysql
-import schedule
+#import schedule
 import time
 import datetime
 from conf.Conexion import *
+from Modules.Scheduler import *
 
 class Validador:
     def __init__(self):
