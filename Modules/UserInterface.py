@@ -482,14 +482,26 @@ class UserInterface:
                                                 type = {"type": "flavor", "info_config": info_config}
                                                 slice["nodos"][nodo]["config"] = type
                                             print("***************************************")
-                                            lista,imagen_escogida=o.lista_imagenes()
-                                            for dic in lista:
-                                                imagen = dic.pop(int(imagen_escogida))
-                                            print(f"El flavor que configurará es: {imagen}")
-                                            #info_config = [imagen]
-                                            for nodo in nodos:
-                                                #type = {"imagen": info_config}
-                                                slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                            print("1. Seleccionar la imagen desde una lista:")
+                                            print("1. Importar una imagen (ingresando un link):")
+                                            opcion = input("Seleccione:")
+                                            if int(opcion) == 1:
+                                                print("***************************************")
+                                                lista,imagen_escogida=o.lista_imagenes()
+
+                                                for dic in lista:
+                                                    imagen = dic.pop(int(imagen_escogida))
+                                                print(f"La imagen que configurará es: {imagen}")
+                                                #info_config = [imagen]
+                                                for nodo in nodos:
+                                                    #type = {"imagen": info_config}
+                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                            elif int(opcion) == 2:
+                                                print("***************************************")
+                                                print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit)")
+                                                link = input("Ingrese un link:")
+                                                slice["nodos"][nodo]["config"]["imagen"] = link
+                                                imagen = f"desde {link}"
                                             print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor} e imagen: {imagen}")
 
                                         elif int(conf_nodos_mode2) == 2:
@@ -502,13 +514,27 @@ class UserInterface:
                                                 type = {"type": "manual", "info_config": info_config}
                                                 slice["nodos"][nodo]["config"] = type
                                             print("***************************************")
-                                            lista, imagen_escogida = o.lista_imagenes()
-                                            for dic in lista:
-                                                imagen = dic.pop(int(imagen_escogida))
-                                            print(f"El flavor que configurará es: {imagen}")
-                                            #info_config = [imagen]
-                                            for nodo in nodos:
-                                                slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                            print("1. Seleccionar la imagen desde una lista:")
+                                            print("1. Importar una imagen (ingresando un link):")
+                                            opcion = input("Seleccione:")
+                                            if int(opcion) == 1:
+                                                print("***************************************")
+                                                lista, imagen_escogida = o.lista_imagenes()
+
+                                                for dic in lista:
+                                                    imagen = dic.pop(int(imagen_escogida))
+                                                print(f"La imagen que configurará es: {imagen}")
+                                                # info_config = [imagen]
+                                                for nodo in nodos:
+                                                    # type = {"imagen": info_config}
+                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                            elif int(opcion) == 2:
+                                                print("***************************************")
+                                                print(
+                                                    "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit)")
+                                                link = input("Ingrese un link:")
+                                                slice["nodos"][nodo]["config"]["imagen"] = link
+                                                imagen = f"desde {link}"
                                             print(f"Se configuró los siguientes nodos {nodos} con:")
                                             print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen}")
                                         else:
@@ -538,14 +564,27 @@ class UserInterface:
                                                     type = {"type": "flavor", "info_config": info_config}
                                                     slice["nodos"][nodo]["config"] = type
                                                 print("***************************************")
-                                                lista, imagen_escogida = o.lista_imagenes()
-                                                for dic in lista:
-                                                    imagen = dic.pop(int(imagen_escogida))
-                                                print(f"El flavor que configurará es: {imagen}")
-                                                #info_config = [imagen]
-                                                for nodo in nodos:
-                                                    #type = {"imagen": info_config}
-                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                print("1. Seleccionar la imagen desde una lista:")
+                                                print("1. Importar una imagen (ingresando un link):")
+                                                opcion = input("Seleccione:")
+                                                if int(opcion) == 1:
+                                                    print("***************************************")
+                                                    lista, imagen_escogida = o.lista_imagenes()
+
+                                                    for dic in lista:
+                                                        imagen = dic.pop(int(imagen_escogida))
+                                                    print(f"La imagen que configurará es: {imagen}")
+                                                    # info_config = [imagen]
+                                                    for nodo in nodos:
+                                                        # type = {"imagen": info_config}
+                                                        slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                elif int(opcion) == 2:
+                                                    print("***************************************")
+                                                    print(
+                                                        "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit)")
+                                                    link = input("Ingrese un link:")
+                                                    slice["nodos"][nodo]["config"]["imagen"] = link
+                                                    imagen = f"desde {link}"
                                                 print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor} e imagen: {imagen}")
                                             elif int(conf_nodos_mode2) == 2:
                                                 cpu = input("Indicar el # de CPUs:")
@@ -557,15 +596,26 @@ class UserInterface:
                                                     type = {"type": "manual", "info_config": info_config}
                                                     slice["nodos"][nodo]["config"] = type
                                                 print("***************************************")
-                                                lista, imagen_escogida = o.lista_imagenes()
-                                                for dic in lista:
-                                                    imagen = dic.pop(int(imagen_escogida))
-                                                print(f"El flavor que configurará es: {imagen}")
-                                                #id_imagen = Conexion().Select("id_imagen","imagen",f"nombre = '{imagen}'")
-                                                #id_imagen=id_imagen[0]
-                                                for nodo in nodos:
-                                                    #type = {"imagen": info_config}
-                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                print("1. Seleccionar la imagen desde una lista:")
+                                                print("1. Importar una imagen (ingresando un link):")
+                                                opcion = input("Seleccione:")
+                                                if int(opcion) == 1:
+                                                    print("***************************************")
+                                                    lista, imagen_escogida = o.lista_imagenes()
+
+                                                    for dic in lista:
+                                                        imagen = dic.pop(int(imagen_escogida))
+                                                    print(f"La imagen que configurará es: {imagen}")
+                                                    # info_config = [imagen]
+                                                    for nodo in nodos:
+                                                        # type = {"imagen": info_config}
+                                                        slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                elif int(opcion) == 2:
+                                                    print("***************************************")
+                                                    print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit)")
+                                                    link = input("Ingrese un link:")
+                                                    slice["nodos"][nodo]["config"]["imagen"] = link
+                                                    imagen = f"desde {link}"
                                                 print(f"Se configuró los siguientes nodos {nodos} con:")
                                                 print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen}")
                                             else:
