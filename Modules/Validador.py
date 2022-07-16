@@ -26,7 +26,7 @@ class Validador:
 
     def validar_estado_vm(delf, vm):
         con = Conexion()
-        estado_vm = con.Select("estado","vm",f"nombre = {vm}")
+        estado_vm = con.Select("estado","vm",f"nombre = '{vm}'")
         return estado_vm
 
     def registrarDataCadaMinuto(self):
@@ -56,7 +56,7 @@ class Validador:
         validador = Validador()
         conn = Conexion()
         #nombre = "headnode"
-        id = conn.Select("recursos_id_estado","servidor",f"nombre = {nombre}")
+        id = conn.Select("recursos_id_estado","servidor",f"nombre = '{nombre}'")
         data = conn.Select("ram,vcpu,storage","recursos",f"id_estado = {id}")
         data_actual = validador.obtenerDataActual()
         data_actual = data_actual[nombre]
