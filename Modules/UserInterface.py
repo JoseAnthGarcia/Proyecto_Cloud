@@ -166,6 +166,11 @@ class UserInterface:
         return input('Opción: ')
 
     @staticmethod
+    def id_imagen(imagen):
+        id_imagen = Conexion().Select("id_imagen", "imagen", f"nombre = '{imagen}'")
+        id_imagen = id_imagen[0]
+
+    @staticmethod
     def def_conf_menu1():
         print('*********************************')
         print('Seleccionar:')
@@ -298,6 +303,39 @@ class UserInterface:
             print("* Cambios guardados e implementando slice ...")
             result = UserInterface.create_topology(slice)
             # TODO
+
+    @staticmethod
+    def lista_flavors():
+        conn=Conexion()
+        flavors=conn.Select("nombre,id_flavor,ram,cpu,storage","flavor","-1")
+        print('Ingrese el número del flavor que desea agregar:')
+        print('Lista de slices:')
+        i = 0
+        lista = []
+        for nombre in flavors:
+            i = i + 1
+            print(f"{i}. {nombre[0]} RAM: {nombre[2]} MB CPU: {nombre[3]} DISCO: {nombre[4]} GB ")
+            dic = {i: nombre[0]}
+            lista.append(dic)
+        print("Escriba 'exit' para salir del menú")
+        return lista, input('Opción: ')
+
+    @staticmethod
+    def lista_imagenes():
+        conn = Conexion()
+        imagenes = conn.Select("nombre", "imagen", "-1")
+        print('Ingrese el número de la imagen que desea agregar:')
+        print('Lista de imágenes:')
+        i = 0
+        lista = []
+        for nombre in imagenes:
+            i = i + 1
+            print(f"{i}. {nombre[0]} ")
+            dic = {i: nombre[0]}
+            lista.append(dic)
+        print("Escriba 'exit' para salir del menú")
+        return lista, input('Opción: ')
+
 
     @staticmethod
     def validate_option(option):
@@ -434,23 +472,24 @@ class UserInterface:
                                         if conf_nodos_mode == 'exit':
                                             pass
                                         elif int(conf_nodos_mode2) == 1:
-                                            # TODO: conexión a base dedatos que devuelve listado de flavors
-                                            print("Lista de flavors:")
-                                            print("* m1.tiny")
-                                            flavor = input("Ingrese el flavor que desea configurar:")
+                                            print("***************************************")
+                                            lista,flavor_escogido=o.lista_flavors()
+                                            for dic in lista:
+                                                flavor = dic.pop(int(flavor_escogido))
+                                            print(f"El flavor que configurará es: {flavor}")
                                             info_config = [flavor]
                                             for nodo in nodos:
                                                 type = {"type": "flavor", "info_config": info_config}
                                                 slice["nodos"][nodo]["config"] = type
-                                            # TODO: conexión a base dedatos que devuelve listado de imagenes
                                             print("***************************************")
-                                            print("Lista de imágenes:")
-                                            print("* cirros")
-                                            imagen = input("Seleccione la imagen que desea configurar:")
-                                            info_config = [imagen]
+                                            lista,imagen_escogida=o.lista_imagenes()
+                                            for dic in lista:
+                                                imagen = dic.pop(int(imagen_escogida))
+                                            print(f"El flavor que configurará es: {imagen}")
+                                            #info_config = [imagen]
                                             for nodo in nodos:
-                                                type = {"imagen": info_config}
-                                                slice["nodos"][nodo]["config"]["imagen"] = info_config
+                                                #type = {"imagen": info_config}
+                                                slice["nodos"][nodo]["config"]["imagen"] = imagen
                                             print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor} e imagen: {imagen}")
 
                                         elif int(conf_nodos_mode2) == 2:
@@ -462,14 +501,14 @@ class UserInterface:
                                             for nodo in nodos:
                                                 type = {"type": "manual", "info_config": info_config}
                                                 slice["nodos"][nodo]["config"] = type
-                                            # TODO: conexión a base dedatos que devuelve listado de imagenes
                                             print("***************************************")
-                                            print("Lista de imágenes:")
-                                            print("* cirros")
-                                            imagen = input("Seleccione la imagen que desea configurar:")
-                                            info_config = [imagen]
+                                            lista, imagen_escogida = o.lista_imagenes()
+                                            for dic in lista:
+                                                imagen = dic.pop(int(imagen_escogida))
+                                            print(f"El flavor que configurará es: {imagen}")
+                                            #info_config = [imagen]
                                             for nodo in nodos:
-                                                slice["nodos"][nodo]["config"]["imagen"] = info_config
+                                                slice["nodos"][nodo]["config"]["imagen"] = imagen
                                             print(f"Se configuró los siguientes nodos {nodos} con:")
                                             print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen}")
                                         else:
@@ -490,23 +529,23 @@ class UserInterface:
                                             if conf_nodos_mode == 'exit':
                                                 pass
                                             elif int(conf_nodos_mode2) == 1:
-                                                # TODO: conexión a base dedatos que devuelve listado de flavors
-                                                print("Lista de flavors:")
-                                                print("* m1.tiny")
-                                                flavor = input("Ingrese el flavor que desea configurar:")
+                                                lista, flavor_escogido = o.lista_flavors()
+                                                for dic in lista:
+                                                    flavor = dic.pop(int(flavor_escogido))
+                                                print(f"El flavor que configurará es: {flavor}")
                                                 info_config = [flavor]
                                                 for nodo in nodos:
                                                     type = {"type": "flavor", "info_config": info_config}
                                                     slice["nodos"][nodo]["config"] = type
-                                                # TODO: conexión a base dedatos que devuelve listado de imagenes
                                                 print("***************************************")
-                                                print("Lista de imágenes:")
-                                                print("* cirros")
-                                                imagen = input("Seleccione la imagen que desea configurar:")
-                                                info_config = [imagen]
+                                                lista, imagen_escogida = o.lista_imagenes()
+                                                for dic in lista:
+                                                    imagen = dic.pop(int(imagen_escogida))
+                                                print(f"El flavor que configurará es: {imagen}")
+                                                #info_config = [imagen]
                                                 for nodo in nodos:
-                                                    type = {"imagen": info_config}
-                                                    slice["nodos"][nodo]["config"]["imagen"] = info_config
+                                                    #type = {"imagen": info_config}
+                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
                                                 print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor} e imagen: {imagen}")
                                             elif int(conf_nodos_mode2) == 2:
                                                 cpu = input("Indicar el # de CPUs:")
@@ -517,12 +556,13 @@ class UserInterface:
                                                 for nodo in nodos:
                                                     type = {"type": "manual", "info_config": info_config}
                                                     slice["nodos"][nodo]["config"] = type
-                                                # TODO: conexión a base dedatos que devuelve listado de imagenes
                                                 print("***************************************")
-                                                print("Lista de imágenes:")
-                                                print("* cirros")
-                                                imagen = input("Seleccione la imagen que desea configurar:")
-                                                info_config = [imagen]
+                                                lista, imagen_escogida = o.lista_imagenes()
+                                                for dic in lista:
+                                                    imagen = dic.pop(int(imagen_escogida))
+                                                print(f"El flavor que configurará es: {imagen}")
+                                                #id_imagen = Conexion().Select("id_imagen","imagen",f"nombre = '{imagen}'")
+                                                #id_imagen=id_imagen[0]
                                                 for nodo in nodos:
                                                     #type = {"imagen": info_config}
                                                     slice["nodos"][nodo]["config"]["imagen"] = imagen
@@ -534,6 +574,18 @@ class UserInterface:
                                     slice["ultimo_nodo"] = prox_node-1
                                     print("------Data a enviar-----")
                                     print(slice)
+                                    slice["estado"] = "guardado"
+                                    if slice["estado"] == "guardado":
+                                        print("*************************************")
+                                        print("1. Guardar como borrardor")
+                                        print("2. Implementar el slice")
+                                        opcion = input("Escoga la opción:")
+                                        if int(opcion) == 1:
+                                            slice["estado"] = "guardado"
+                                        elif int(opcion) == 2:
+                                            slice["estado"] = "ejecutado"
+                                    elif slice["estado"] == "ejecutado":
+                                        print(f"* Actualizando el slice {slice['nombre']}")
                                     print("------------------------")
                                     o.save_changes(slice, from_scratch)
                                     pass

@@ -23,6 +23,7 @@ class SliceAdministrator:
         lista_activo=[]
         lista_inactivo=[]
         message=""
+        validador = Validador()
         for vm in vms:
             val = validador.validar_estado_vm(vm[0])
             if val == 'Inactivo':
@@ -38,3 +39,7 @@ class SliceAdministrator:
         else:
             message = f"No se pudo borrar el slice {slice} porque las VMs: {lista_activo} están activas."
         return message
+
+    def update_slice(self, slice):
+        #llamar a driver para actualizar
+        pass
