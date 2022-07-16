@@ -1,7 +1,7 @@
 import requests
 import json
 import pymysql
-#import schedule
+import schedule
 import time
 import datetime
 from conf.Conexion import *
@@ -11,7 +11,8 @@ class Validador:
     def __init__(self):
         pass
 
-    def validar_recursos(delf, nombre,recursos):
+    def validar_recursos(self, nombre,recursos):
+        validador= Validador()
         data_actual = validador.obtenerDataActual()
         data_actual = data_actual[nombre]
         ram_actual = data_actual["ram"]
@@ -36,6 +37,7 @@ class Validador:
         timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
         try:
             with conn.cursor() as cur:
+                validador = Validador()
                 schedule.every(1).minutes.do(validador.registerAllData(server_names),cur=cur,conn=conn,timestamp=timestamp)
                 while True:
                     schedule.run_pending()
@@ -51,6 +53,7 @@ class Validador:
         return data_actual.json()
 
     def registerData(self,nombre):
+        validador = Validador()
         conn = Conexion()
         #nombre = "headnode"
         id = conn.Select("recursos_id_estado","servidor",f"nombre = {nombre}")
@@ -70,6 +73,7 @@ class Validador:
         pass
 
     def registerAllData(cur, server_names):
+        validador = Validador()
         #server_names = [headnode,worker1,worker2]
         for i in server_names:
             validador.registerData(server_names[i])
