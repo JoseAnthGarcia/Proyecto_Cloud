@@ -498,7 +498,7 @@ class UserInterface:
                                                     slice["nodos"][nodo]["config"]["imagen"] = imagen
                                             elif int(opcion) == 2:
                                                 print("***************************************")
-                                                print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit)")
+                                                print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                 link = input("Ingrese un link:")
                                                 slice["nodos"][nodo]["config"]["imagen"] = link
                                                 imagen = f"desde {link}"
@@ -531,7 +531,7 @@ class UserInterface:
                                             elif int(opcion) == 2:
                                                 print("***************************************")
                                                 print(
-                                                    "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit)")
+                                                    "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                 link = input("Ingrese un link:")
                                                 slice["nodos"][nodo]["config"]["imagen"] = link
                                                 imagen = f"desde {link}"
@@ -581,7 +581,7 @@ class UserInterface:
                                                 elif int(opcion) == 2:
                                                     print("***************************************")
                                                     print(
-                                                        "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit)")
+                                                        "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                     link = input("Ingrese un link:")
                                                     slice["nodos"][nodo]["config"]["imagen"] = link
                                                     imagen = f"desde {link}"
@@ -612,7 +612,7 @@ class UserInterface:
                                                         slice["nodos"][nodo]["config"]["imagen"] = imagen
                                                 elif int(opcion) == 2:
                                                     print("***************************************")
-                                                    print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit)")
+                                                    print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                     link = input("Ingrese un link:")
                                                     slice["nodos"][nodo]["config"]["imagen"] = link
                                                     imagen = f"desde {link}"
