@@ -50,6 +50,14 @@ class SliceAdministrator:
         #llamar a driver para actualizar
         pass
 
+    def register_data(self):
+        validador = Validador()
+        validador.registrarDataCadaMinuto()
+        #server_names = ["Headnode","Worker1,Worker2,Worker3,Worker4,Worker5,Worker6"]
+        #validador.registerAllData(server_names)
+        #server_names = ["Controller", "Compute1,Compute2,Compute3,Compute4,Compute5,Compute6"]
+        #validador.registerAllData(server_names)
+
     def create_slice(self, slice):
         #llamar a driver para actualizar
         pass

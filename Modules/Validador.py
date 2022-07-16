@@ -32,8 +32,8 @@ class Validador:
 
     def registrarDataCadaMinuto(self):
         conn = Conexion()
-        server_names = ["worker1","worker2","worker3","worker4","worker5","worker6",
-                        "compute1","compute2","compute3","compute4","compute5","compute6"]
+        server_names = ["Worker1","Worker2","Worker3","Worker4","Worker5","Worker6",
+                        "Compute1","Compute2","Compute3","Compute4","Compute5","Compute6"]
         ts = time.time()
         timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
         try:
@@ -47,7 +47,7 @@ class Validador:
             conn.close()
 
     def obtenerDataActual(self):
-        url = 'http://10.20.12.136:8081/ram'
+        url = 'http://10.20.12.58:8081/cpu-metrics'
         data_actual = requests.get(url)
         #datos = [ram]
         #header = {'accept': 'application/json'}
@@ -79,7 +79,3 @@ class Validador:
         for i in server_names:
             validador.registerData(server_names[i])
 
-
-# validador = Validador()
-# server_names = ["headnode","worker1,worker2"]
-# validador.registerAllData(server_names)
