@@ -11,7 +11,8 @@ class SliceAdministrator:
         FACTOR = 2
         slice, result = scheduler_main(grafo, FACTOR)
         if result:
-            result = linux_driver_main(slice)
+            nuevo_slice = linux_driver_main(slice)
+            return nuevo_slice
         else:
             return False
 
@@ -23,6 +24,7 @@ class SliceAdministrator:
         lista_activo=[]
         lista_inactivo=[]
         message=""
+        validador = Validador()
         for vm in vms:
             val = validador.validar_estado_vm(vm[0])
             if val == 'Inactivo':
@@ -38,3 +40,7 @@ class SliceAdministrator:
         else:
             message = f"No se pudo borrar el slice {slice} porque las VMs: {lista_activo} están activas."
         return message
+
+    def update_slice(self, slice):
+        #llamar a driver para actualizar
+        pass
