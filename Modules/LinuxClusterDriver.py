@@ -79,8 +79,37 @@ def linux_driver_main(slice):
         vnc_port += 1
     
 def borrar_nodo(slice):
-    #Código de avance en prueba4.py
-    print("Hola")
+    for nodo in list(slice["nodos"]):
+        if (slice["nodo_eliminar"] in slice["nodos"][nodo]["enlaces"]):
+            slice["nodos"][nodo]["enlaces"].remove(slice["nodo_eliminar"])
+        if slice["nodo_eliminar"]==nodo:
+            nombre_vm= slice["mapeo_nombre"][nodo]
+            vm_worker_id = slice["nodos"][nodo]["id_worker"]
+            nombre_nodo=nodo
+            #print(nombre_vm)
+            #print(vm_worker_id)
+            del slice["nodos"][nodo]
+    print("---------------------------------------------------------------------")
+    print(slice)
+    ################### BORRADO EN EL HEADNODE #############################
+
+    conn2=Conexion2()
+    id_nodo_cluster=conn2.Select("id_nodo","nodo","nombre= "+nombre_vm)
+    taps=conn2.Select("nombre","enlace","nodo_id_nodo= "+id_nodo_cluster)
+    result = requests.get("http://10.20.12.58:8081/vm/borrar?worker_id="+vm_worker_id+"&vm_name="+nombre_vm+"&taps="+taps)
+    print(result.json())
+    ################### BORRADO EN LA BD #############################
+
+    if (result):
+        conn= Conexion()
+        id_nodo_general= conn.Select("id_vm","vm","nombre= "+nombre_vm)
+        id_recurso_general= conn.Select("recursos_id_estado","vm","nombre= "+nombre_vm)
+        conn.Delete("recursos","id_recursos= "+id_recurso_general)
+        conn.Delete("vm","id_vm= "+id_nodo_general)
+        conn2.Delete("nodo", "nombre= "+nombre_vm)
+        conn2.Delete("enlace","nodo_id_nodo= "+id_nodo_cluster)
+
+
     
 
     
