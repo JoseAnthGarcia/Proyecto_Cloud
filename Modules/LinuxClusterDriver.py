@@ -44,7 +44,7 @@ def linux_driver_main(slice):
                 recursos = nodo["config"]["info_config"]
                 vm_recursos = {"vcpu": int(recursos[0]), "ram": int(recursos[1]), "disk":int(recursos[2])}
             else:
-                recursos=conn.Select("cpu,ram,storage","flavor","nombre="+"'"+slice["config"]["info_config"]+"'")
+                recursos=conn.Select("cpu,ram,storage","flavor","nombre="+"'"+nodo["config"]["info_config"]+"'")
                 vm_recursos = {"vcpu": int(recursos[0][0]), "ram": int(recursos[0][1]), "disk":int(recursos[0][2])}
             enlaces=[]
             for i in range(len(nodo["enlaces"])):
