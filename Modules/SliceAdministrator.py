@@ -1,8 +1,10 @@
 
-from Modules.Scheduler import *
+from Modules.App_Scheduler import *
 from Modules.LinuxClusterDriver import *
 from conf.Conexion import *
 from Modules.Validador import  *
+import json
+
 class SliceAdministrator:
     def __init__(self):
         pass
@@ -43,12 +45,18 @@ class SliceAdministrator:
         return message
 
     def update_slice(self, slice):
+
+        sa = SliceAdministrator()
+        sa.register_data()
         #llamar a driver para actualizar
         pass
 
     def save_slice(self, slice):
         #llamar a driver para actualizar
-        pass
+        f = open(f"./Modules/Slices/{slice['nombre']}.json", "w")
+        f.write(json.dumps(slice))
+        f.close()
+        print(f"* Slice {slice['nombre']} guardado.")
 
     def register_data(self):
         validador = Validador()
@@ -59,5 +67,8 @@ class SliceAdministrator:
         #validador.registerAllData(server_names)
 
     def create_slice(self, slice):
-        #llamar a driver para actualizar
-        pass
+        sa = SliceAdministrator()
+        sa.register_data()
+        slice_nuevo = sa.create_topology(slice)
+        return slice_nuevo
+

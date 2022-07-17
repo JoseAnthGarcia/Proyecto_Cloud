@@ -5,6 +5,7 @@ import json
 import os
 from conf.Conexion import *
 import logging
+import schedule
 
 class UserInterface:
     def __init__(self):
@@ -677,19 +678,26 @@ class UserInterface:
                                         print("*************************************")
                                         print("1. Guardar como borrardor")
                                         print("2. Implementar el slice")
-                                        opcion = input("Escoga la opción:")
+                                        opcion = input("Escoja la opción:")
                                         sa = SliceAdministrator()
                                         if int(opcion) == 1:
                                             slice["estado"] = "guardado"
+                                            print("*************************************")
+                                            print("Guardando .....")
                                             sa.save_slice(slice)
                                         elif int(opcion) == 2:
+                                            print("*************************************")
+                                            print("Implementando .....")
+                                            slice_nuevo = sa.create_slice(slice)
+                                            print("*************************************")
+                                            print(slice_nuevo)
                                             slice["estado"] = "ejecutado"
-                                            sa.create_slice(slice)
+                                            print("*************************************")
                                     elif slice["estado"] == "ejecutado":
                                         print(f"* Actualizando el slice {slice['nombre']}")
                                         sa.update_slice(slice)
                                     print("------------------------")
-                                    o.save_changes(slice, from_scratch)
+                                    #o.save_changes(slice, from_scratch)
                                     pass
                                 elif int(opt) == 8:
                                     topo = Topology()

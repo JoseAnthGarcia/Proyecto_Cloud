@@ -1,11 +1,12 @@
 import requests
-import json
-import pymysql
-import schedule
+#import schedule as sch
 import time
 import datetime
+
+import schedule
+
 from conf.Conexion import *
-from Modules.Scheduler import *
+
 
 class Validador:
     def __init__(self):
@@ -19,7 +20,7 @@ class Validador:
         vcpu_actual = data_actual["vcpu"]
         storage_actual = data_actual["storage"]
         valid = False
-        if vcpu_actual > recursos[0] & ram_actual > recursos[1] &  storage_actual > recursos[2]:
+        if vcpu_actual > recursos[0] & ram_actual > recursos[1] & storage_actual > recursos[2]:
             valid = True
         return valid
 
@@ -32,19 +33,20 @@ class Validador:
 
     def registrarDataCadaMinuto(self):
         conn = Conexion()
+        con = conn.conectar()
         server_names = ["Worker1","Worker2","Worker3","Worker4","Worker5","Worker6",
                         "Compute1","Compute2","Compute3","Compute4","Compute5","Compute6"]
         ts = time.time()
         timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
         try:
-            with conn.cursor() as cur:
+            with con.cursor() as cur:
                 validador = Validador()
-                schedule.every(1).minutes.do(validador.registerAllData(server_names),cur=cur,conn=conn,timestamp=timestamp)
+                schedule.every(1).minutes.do(validador.registerAllData(server_names),cur=cur,conn=con,timestamp=timestamp)
                 while True:
                     schedule.run_pending()
                     time.sleep(1)
         finally:
-            conn.close()
+            con.close()
 
     def obtenerDataActual(self):
         url = 'http://10.20.12.58:8081/cpu-metrics'
@@ -57,8 +59,9 @@ class Validador:
         validador = Validador()
         conn = Conexion()
         #nombre = "headnode"
-        id = conn.Select("recursos_id_estado","servidor",f"nombre = '{nombre}'")
-        data = conn.Select("ram,vcpu,storage","recursos",f"id_estado = {id}")
+        id = conn.Select("id_recurso","servidor",f"nombre = '{nombre}'")
+        id=id[0]
+        #data = conn.Select("ram,vcpu,storage","recursos",f"id_estado = {id[0]}")
         data_actual = validador.obtenerDataActual()
         data_actual = data_actual[nombre]
         ram_actual = data_actual["ram"]
@@ -71,11 +74,11 @@ class Validador:
         #storage_actual = ((data[2]-storage_actual)/data[2])*100
         #registrar
         conn.Insert("recursos","ram_available,vcpu_available,storage_available",f"{ram_actual},{vcpu_actual},{storage_actual}")
-        pass
+
 
     def registerAllData(cur, server_names):
         validador = Validador()
         #server_names = [headnode,worker1,worker2]
         for i in server_names:
-            validador.registerData(server_names[i])
+            validador.registerData(i)
 
