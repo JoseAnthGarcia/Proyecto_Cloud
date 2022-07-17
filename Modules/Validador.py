@@ -80,5 +80,5 @@ class Validador:
         validador = Validador()
         #server_names = [headnode,worker1,worker2]
         for i in server_names:
-            validador.registerData(server_names[i])
+            validador.registerData(i)
 
