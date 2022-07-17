@@ -21,8 +21,9 @@ class Conexion:
                 if condicion=="-1":
                     cur.execute("Select "+valores+" from " +tabla)
                 else:
-                    #print("Select "+valores+" from "+tabla+ " where "+condicion)
-                    cur.execute("Select "+valores+" from "+tabla+ " where "+condicion)
+                    sql="Select "+valores+" from "+tabla+ " where "+condicion
+                    print(sql)
+                    cur.execute(sql)
                 resultado = cur.fetchall()
         finally:
             con.close()
@@ -108,7 +109,9 @@ class Conexion2():
                 if condicion=="-1":
                     cur.execute("Select "+valores+" from " +tabla)
                 else:
-                    cur.execute("Select "+valores+" from "+tabla+ " where "+condicion)
+                    sql="Select "+valores+" from "+tabla+ " where "+condicion
+                    print(sql)
+                    cur.execute(sql)
                 resultado = cur.fetchall()
         finally:
             con.close()
