@@ -47,7 +47,7 @@ class SliceAdministrator:
     def update_slice(self, slice):
 
         sa = SliceAdministrator()
-        sa.register_data()
+        #sa.register_data()
         #llamar a driver para actualizar
         pass
 
@@ -68,7 +68,7 @@ class SliceAdministrator:
 
     def create_slice(self, slice):
         sa = SliceAdministrator()
-        sa.register_data()
+        #sa.register_data()
         slice_nuevo = sa.create_topology(slice)
         return slice_nuevo
 
