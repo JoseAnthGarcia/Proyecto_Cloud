@@ -37,6 +37,11 @@ class UserInterface:
         return input('Opción: ')
 
     @staticmethod
+    def listar_zonas(tipo):
+        conn = Conexion()
+        zonas = conn.Select("")
+
+    @staticmethod
     def listar_slices(tipo):
         conn = Conexion()
         server = conn.Select("nombre,id_slice", "slice",f"tipo = '{tipo}' ")
@@ -51,10 +56,10 @@ class UserInterface:
 
 
     @staticmethod
-    def def_zona_disponibilidad_menu3():
+    def def_zona_disponibilidad_menu3(tipo):
         print('*********************************')
         conn = Conexion()
-        server = conn.Select("nombre", "servidor","id_zona < 0")
+        server = conn.Select("nombre", "servidor",f"id_zona < 0 && descripcion = '{tipo}'")
         #server = conn.Select("nombre", "servidor", "-1")
         i=0
         lista=[]
@@ -79,10 +84,10 @@ class UserInterface:
             return lista,input('Opción: ')
 
     @staticmethod
-    def def_register_zona(zona):
+    def def_register_zona(zona,tipo):
         nombre=zona[0]
         conn = Conexion()
-        conn.Insert("zona_disponibilidad","nombre,descripcion",f"'{nombre}',''")
+        conn.Insert("zona_disponibilidad","nombre,descripcion",f"'{nombre}','{tipo}'")
         id = conn.Select("idzona_disponibilidad","zona_disponibilidad",f"nombre='{nombre}'")
         id=id[0][0]
         servers = zona[1]
@@ -364,6 +369,8 @@ class UserInterface:
 
     @staticmethod
     def iniciar_programa():
+        sa = SliceAdministrator()
+        #sa.register_data()
         o = UserInterface()
         while True:
             print('*********************************')
@@ -515,9 +522,9 @@ class UserInterface:
                                                 flavor = dic.get(int(flavor_escogido))
                                                 if flavor is not None:
                                                     print(f"El flavor que configurará es: {flavor}")
-                                                    info_config = [flavor]
+                                                    flavor2 = [flavor]
                                             for nodo in nodos:
-                                                type = {"type": "flavor", "info_config": info_config}
+                                                type = {"type": "flavor", "info_config": flavor2[0]}
                                                 slice["nodos"][nodo]["config"] = type
                                             print("***************************************")
                                             print("1. Seleccionar la imagen desde una lista:")
@@ -531,17 +538,20 @@ class UserInterface:
                                                     imagen = dic.pop(int(imagen_escogida))
                                                     if imagen is not None:
                                                         print(f"La imagen que configurará es: {imagen}")
-                                                #info_config = [imagen]
+                                                        info_config = {"nombre": {imagen}, "url": "-"}
                                                 for nodo in nodos:
                                                     #type = {"imagen": info_config}
-                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                    slice["nodos"][nodo]["config"]["imagen"] = info_config
                                             elif int(opcion) == 2:
                                                 print("***************************************")
                                                 print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                 link = input("Ingrese un link:")
-                                                slice["nodos"][nodo]["config"]["imagen"] = link
+                                                nombre = input("Ingrese el nombre:")
+                                                info_config = {"nombre": {nombre}, "url": {link}}
+                                                for nodo in nodos:
+                                                    slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                 imagen = f"desde {link}"
-                                            print(f"Se configuró los siguientes nodos {nodos} con flavor: {info_config[0]} e imagen: {imagen}")
+                                            print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor2[0]} e imagen: {imagen}")
 
                                         elif int(conf_nodos_mode2) == 2:
                                             cpu = input("Indicar el # de CPUs:")
@@ -564,16 +574,19 @@ class UserInterface:
                                                     imagen = dic.pop(int(imagen_escogida))
                                                     if imagen is not None:
                                                         print(f"La imagen que configurará es: {imagen}")
-                                                # info_config = [imagen]
+                                                        info_config = {"nombre": {imagen}, "url": "-"}
                                                 for nodo in nodos:
                                                     # type = {"imagen": info_config}
-                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                    slice["nodos"][nodo]["config"]["imagen"] = info_config
                                             elif int(opcion) == 2:
                                                 print("***************************************")
                                                 print(
                                                     "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                 link = input("Ingrese un link:")
-                                                slice["nodos"][nodo]["config"]["imagen"] = link
+                                                nombre = input("Ingrese un nombre:")
+                                                info_config = {"nombre":{nombre},"url":{link}}
+                                                for nodo in nodos:
+                                                    slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                 imagen = f"desde {link}"
                                             print(f"Se configuró los siguientes nodos {nodos} con:")
                                             print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen}")
@@ -606,9 +619,9 @@ class UserInterface:
                                                     flavor = dic.get(int(flavor_escogido))
                                                     if flavor is not None:
                                                         print(f"El flavor que configurará es: {flavor}")
-                                                        info_config = [flavor]
+                                                        flavor2 = [flavor]
                                                 for nodo in nodos:
-                                                    type = {"type": "flavor", "info_config": info_config}
+                                                    type = {"type": "flavor", "info_config": flavor2[0]}
                                                     slice["nodos"][nodo]["config"] = type
                                                 print("***************************************")
                                                 print("1. Seleccionar la imagen desde una lista:")
@@ -622,21 +635,24 @@ class UserInterface:
                                                         imagen = dic.pop(int(imagen_escogida))
                                                         if imagen is not None:
                                                             print(f"La imagen que configurará es: {imagen}")
-                                                    # info_config = [imagen]
+                                                            info_config = {"nombre":{imagen},"url":"-"}
                                                     for nodo in nodos:
                                                         # type = {"imagen": info_config}
-                                                        slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                        slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                 elif int(opcion) == 2:
                                                     print("***************************************")
                                                     print(
                                                         "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                     link = input("Ingrese un link:")
-                                                    slice["nodos"][nodo]["config"]["imagen"] = link
+                                                    nombre = input("Ingrese un nombre:")
+                                                    info_config={"nombre": {imagen}, "url": "-"}
+                                                    for nodo in nodos:
+                                                        slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                     imagen = f"desde {link}"
-                                                print(f"Se configuró los siguientes nodos {nodos} con flavor: {info_config[0]} e imagen: {imagen}")
+                                                print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor2[0]} e imagen: {imagen}")
                                             elif int(conf_nodos_mode2) == 2:
                                                 cpu = input("Indicar el # de CPUs:")
-                                                ram = input("Indicar la capacidad de la memoria RAM en GB:")
+                                                ram = input("Indicar la capacidad de la memoria RAM en MB:")
                                                 disco = input("Indicar la capacidad de disco en GB:")
                                                 info_config = [cpu, ram, disco]
                                                 config = {}
@@ -655,15 +671,18 @@ class UserInterface:
                                                         imagen = dic.pop(int(imagen_escogida))
                                                         if imagen is not None:
                                                             print(f"La imagen que configurará es: {imagen}")
-                                                    # info_config = [imagen]
+                                                            info_config = {"nombre":{imagen},"url":"-"}
                                                     for nodo in nodos:
                                                         # type = {"imagen": info_config}
-                                                        slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                        slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                 elif int(opcion) == 2:
                                                     print("***************************************")
                                                     print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                     link = input("Ingrese un link:")
-                                                    slice["nodos"][nodo]["config"]["imagen"] = link
+                                                    nombre = input("Ingrese un nombre:")
+                                                    info_config={"nombre":{nombre},"url":{link}}
+                                                    for nodo in nodos:
+                                                        slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                     imagen = f"desde {link}"
                                                 print(f"Se configuró los siguientes nodos {nodos} con:")
                                                 print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen}")
@@ -687,6 +706,7 @@ class UserInterface:
                                             sa.save_slice(slice)
                                         elif int(opcion) == 2:
                                             print("*************************************")
+                                            #lista_zonas
                                             print("Implementando .....")
                                             slice_nuevo = sa.create_slice(slice)
                                             print("*************************************")
@@ -752,38 +772,40 @@ class UserInterface:
                     tipo_zona = int(tipo_zona)
                     if tipo_zona == 1:
                         server_linux_cluster = []
-                        lista,server_escogido = o.def_zona_disponibilidad_menu3()
-                        if server_escogido == "exit":
-                            #print("Se registró su zona de disponibilidad" , nombre_zona, " de tipo Linux cluster en los servidores", server_linux_cluster)
-                            break
-                        else:
-                            servers = server_escogido.split(',')
-                            for server in servers:
-                                for dic in lista:
-                                    nombre_escogido=dic.get(int(server))
-                                    if nombre_escogido is not None:
-                                        print(f"Server escogido: {nombre_escogido}")
-                                        server_linux_cluster.append(nombre_escogido)
-                        zona = [nombre_zona, server_linux_cluster]
-                        #print(f"Zona: {zona}")
-                        o.def_register_zona(zona)
+                        lista,server_escogido = o.def_zona_disponibilidad_menu3("linux_cluster")
+                        if len(lista)>0:
+                            if server_escogido == "exit":
+                                #print("Se registró su zona de disponibilidad" , nombre_zona, " de tipo Linux cluster en los servidores", server_linux_cluster)
+                                break
+                            else:
+                                servers = server_escogido.split(',')
+                                for server in servers:
+                                    for dic in lista:
+                                        nombre_escogido=dic.get(int(server))
+                                        if nombre_escogido is not None:
+                                            print(f"Server escogido: {nombre_escogido}")
+                                            server_linux_cluster.append(nombre_escogido)
+                            zona = [nombre_zona, server_linux_cluster]
+                            #print(f"Zona: {zona}")
+                            o.def_register_zona(zona,"linux_cluster")
                     elif tipo_zona == 2:
                         server_openstack = []
-                        lista, server_escogido = o.def_zona_disponibilidad_menu3()
-                        if server_escogido == "exit":
-                            # print("Se registró su zona de disponibilidad" , nombre_zona, " de tipo Linux cluster en los servidores", server_linux_cluster)
-                            break
-                        else:
-                            servers = server_escogido.split(',')
-                            for server in servers:
-                                for dic in lista:
-                                    nombre_escogido = dic.get(int(server))
-                                    if nombre_escogido is not None:
-                                        print(f"Server escogido: {nombre_escogido}")
-                                        server_openstack.append(nombre_escogido)
-                        zona = [nombre_zona, server_openstack]
-                        # print(f"Zona: {zona}")
-                        o.def_register_zona(zona)
+                        lista, server_escogido = o.def_zona_disponibilidad_menu3("openstack")
+                        if len(lista)>0:
+                            if server_escogido == "exit":
+                                # print("Se registró su zona de disponibilidad" , nombre_zona, " de tipo Linux cluster en los servidores", server_linux_cluster)
+                                break
+                            else:
+                                servers = server_escogido.split(',')
+                                for server in servers:
+                                    for dic in lista:
+                                        nombre_escogido = dic.get(int(server))
+                                        if nombre_escogido is not None:
+                                            print(f"Server escogido: {nombre_escogido}")
+                                            server_openstack.append(nombre_escogido)
+                            zona = [nombre_zona, server_openstack]
+                            # print(f"Zona: {zona}")
+                            o.def_register_zona(zona,"openstack")
                     else:
                         break
                 elif option == 5:
