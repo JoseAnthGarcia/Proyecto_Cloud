@@ -34,6 +34,7 @@ def linux_driver_main(slice):
     worker_list = [] #Para crear el flow
     for nodo_key in slice["nodos"]:
         nodo = slice["nodos"][nodo_key]
+        #print(nodo["instanciado"])
         if(nodo["instanciado"]=="False"):
             vm_nombre = vm_nombres[nodo_key]
             if nodo["config"]["type"] == "manual":
@@ -83,11 +84,12 @@ def linux_driver_main(slice):
             vnc_port += 1
     #Creamos el flow:
     # worker_list = "-" if len(worker_list)==0 else ",".join(worker_list)
-    worker_list = ",".join(worker_list)
-    flow_data={"vlan_id": vlan, "workers_id": worker_list}
-    result = requests.post("http://10.20.12.58:8081/OFS/flows", json= data)
+    #print("-------------------------------------------------------------------------------------------")
+    #worker_list = ",".join(worker_list)
+    #flow_data={"vlan_id": vlan, "workers_id": worker_list}
+    #result = requests.post("http://10.20.12.58:8081/OFS/flows", json= flow_data)
     slice["mapeo_nombres"] = vm_nombres
-    print (slice)
+    #print (slice)
     return slice
     
 def borrar_slice(slice):
@@ -107,8 +109,13 @@ def borrar_slice(slice):
             id_recurso_general= conn.Select("recursos_id_estado","vm","nombre= "+nombre_vm)
             conn.Delete("recursos","id_recursos= "+id_recurso_general)
             conn.Delete("vm","id_vm= "+id_nodo_general)
-            conn2.Delete("nodo", "nombre= "+nombre_vm)
+            #conn.Delete("slice", "nombre= "+slice["nombre"])
             conn2.Delete("enlace","nodo_id_nodo= "+id_nodo_cluster)
+            conn2.Delete("vcpu","Nodo_id_nodo= "+id_nodo_cluster)
+            conn2.Delete("cpu","Nodo_id_nodo= "+id_nodo_cluster)
+            conn2.Delete("ram","Nodo_id_nodo= "+id_nodo_cluster)
+            conn2.Delete("nodo", "nombre= "+nombre_vm)
+            
 
     
 
