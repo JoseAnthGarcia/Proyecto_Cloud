@@ -19,7 +19,6 @@ def linux_driver_main(slice):
     conn = Conexion()
     conn2= Conexion2()
     # VLAN ID actually ranges from 1 to 4094
-    vlan_id = 1
     maxvlan= conn.GetMaxVlan()
     maxvlan=maxvlan[0][0]
     if maxvlan==None:
@@ -32,6 +31,7 @@ def linux_driver_main(slice):
     id_slice=conn.Insert("slice", "nombre,tipo,vlan_id,fecha_creacion,fecha_modificacion", f"'{nombre_slice}','linux_cluster',{vlan},now(),now()")
     vm_nombres = generar_vm_token(slice["nodos"])
     vnc_port = 1
+    worker_list = [] #Para crear el flow
     for nodo_key in slice["nodos"]:
         nodo = slice["nodos"][nodo_key]
         if(nodo["instanciado"]=="False"):
@@ -47,12 +47,14 @@ def linux_driver_main(slice):
                 enlaces.append(vm_nombres[nodo["enlaces"][i]])
             imagen = nodo["config"]["imagen"]
             vm_worker_id = nodo["id_worker"]
+            if str(vm_worker_id) not in worker_list:
+                worker_list.append(str(vm_worker_id))
             enlaces = ",".join(enlaces)
             data = {"vm_token": vm_nombre,
                     "vm_recursos": vm_recursos,
                     "enlaces":enlaces,
                     "imagen": imagen,
-                    "vlan_id": vlan_id,
+                    "vlan_id": vlan,
                     "vnc_port": vnc_port,
                     "vm_worker_id" : vm_worker_id}
             result = requests.post("http://10.20.12.58:8081/vm/crear", json= data)
@@ -79,6 +81,11 @@ def linux_driver_main(slice):
             else:
                 print("Falló la creación de la vm "+ data["vm_nombre"])
             vnc_port += 1
+    #Creamos el flow:
+    # worker_list = "-" if len(worker_list)==0 else ",".join(worker_list)
+    worker_list = ",".join(worker_list)
+    flow_data={"vlan_id": vlan, "workers_id": worker_list}
+    result = requests.post("http://10.20.12.58:8081/OFS/flows", json= data)
     slice["mapeo_nombres"] = vm_nombres
     print (slice)
     return slice
