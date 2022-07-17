@@ -15,11 +15,12 @@ def generar_vm_token(nodos):
     return vm_nombres
 
 def linux_driver_main(slice):
+    print(slice)
     #fecha_actual= datetime.today()
     conn = Conexion()
     conn2= Conexion2()
     id_s=conn.Select("id_slice","slice","nombre="+"'"+slice["nombre"]+"'"+"limit 1")
-    id_imagen= conn.Select("id_imagen","imagen","nombre="+"'"+slice["imagen"]["nombre"]+"'"+"limit 1")
+    
     # VLAN ID actually ranges from 1 to 4094
     maxvlan= conn.GetMaxVlan()
     maxvlan=maxvlan[0][0]
@@ -38,6 +39,8 @@ def linux_driver_main(slice):
     for nodo_key in slice["nodos"]:
         nodo = slice["nodos"][nodo_key]
         #print(nodo["instanciado"])
+        print(nodo["config"]["imagen"]["nombre"])
+        id_imagen= conn.Select("id_imagen","imagen","nombre="+"'"+nodo["config"]["imagen"]["nombre"]+"'"+"limit 1")
         if(nodo["instanciado"]=="false"):
             vm_nombre = vm_nombres[nodo_key]
             if nodo["config"]["type"] == "manual":
