@@ -39,7 +39,22 @@ class UserInterface:
     @staticmethod
     def listar_zonas(tipo):
         conn = Conexion()
-        zonas = conn.Select("")
+        zonas = conn.Select("nombre,idzona_disponibilidad","zona_disponibilidad",f"descripcion='{tipo}'")
+        i=0
+        lista=[]
+        for zona in zonas:
+            i=i+1
+            servers=conn.Select("nombre,id_recurso","servidor",f"id_zona={zona[1]}")
+            message = f"{i}. {zona[0]} :"
+            for server in servers:
+                recurso = conn.Select("ram_available,vcpu_available,storage_available","recursos",f"id_recursos={server[1]}")
+                recurso = recurso[0]
+                message = message + f"{server[0]} RAM: {recurso[0]} CPU: {recurso[1]} DISCO: {recurso[2]}"
+                #print(f"{i}. {zona[0]} : {server[0]} RAM: {recurso[0]} CPU: {recurso[1]} DISCO: {recurso[2]}")
+            print(message)
+            dic = {i: zona[0]}
+            lista.append(dic)
+        return lista
 
     @staticmethod
     def listar_slices(tipo):
@@ -284,7 +299,7 @@ class UserInterface:
         prox_node = last_node+1
         slice["nodos"].update(sub_grafo) # Agrega los nuevos valores de sub_grafo al diccionario slice.
         for nodo in slice["nodos"]:
-            slice["nodos"][nodo]["instanciado"] = False
+            slice["nodos"][nodo]["instanciado"] = "false"
         print(f"* Subgrafo del tipo {sub_topologies[int(topo_type)-1]} agregado.")
 
         return slice, prox_node
@@ -417,7 +432,7 @@ class UserInterface:
                                     break
                                 elif int(opt) == 1:
                                     slice["nodos"][f"n{prox_node}"] = {"enlaces":[]}
-                                    slice["nodos"][f"n{prox_node}"]["instanciado"] = False
+                                    slice["nodos"][f"n{prox_node}"]["instanciado"] = "false"
                                     print(f"* Nodo n{prox_node} agregado.")
                                     prox_node += 1
                                     pass
@@ -505,7 +520,7 @@ class UserInterface:
                                         if slice["estado"] == "ejecutado":
                                             print("Se configurará todos los nodos que no se han implementado.")
                                             for node_name in nodos_dict.keys():
-                                                if slice["nodos"][node_name]["instanciado"] == False:
+                                                if slice["nodos"][node_name]["instanciado"] == "false":
                                                     nodos_lista.append(node_name)
                                         else:
                                             for node_name in nodos_dict.keys():
@@ -598,7 +613,7 @@ class UserInterface:
                                         if slice["estado"] == "ejecutado":
                                             print("Se configurará todos los nodos que no se han implementado.")
                                             for node_name in nodos_dict.keys():
-                                                if slice["nodos"][node_name]["instanciado"] == False:
+                                                if slice["nodos"][node_name]["instanciado"] == "false":
                                                     print(f"- {node_name}")
                                         else:
                                             for node_name in nodos_dict.keys():
@@ -706,13 +721,51 @@ class UserInterface:
                                             sa.save_slice(slice)
                                         elif int(opcion) == 2:
                                             print("*************************************")
-                                            #lista_zonas
-                                            print("Implementando .....")
-                                            slice_nuevo = sa.create_slice(slice)
-                                            print("*************************************")
-                                            print(slice_nuevo)
-                                            slice["estado"] = "ejecutado"
-                                            print("*************************************")
+                                            # listar_zonas
+                                            tipo = o.def_zona_disponibilidad_menu2()
+                                            if int(tipo) == 3:
+                                                print("-----")
+                                            elif int(tipo) == 1:
+                                                tipo_zona = "linux_cluster"
+                                                lista = o.listar_zonas(tipo_zona)
+                                                if len(lista)>0:
+                                                    zona = input("Escoja la zona:")
+                                                    for dic in lista:
+                                                        zona_escogida = dic.get(int(zona))
+                                                        if zona_escogida is not None:
+                                                            print(f"Zona escogida: {zona_escogida}")
+                                                            slice["zona"] = {"nombre":zona_escogida}
+                                                            #print(slice)
+                                                    print("Implementando .....")
+                                                    slice_nuevo = sa.create_slice(slice)
+                                                    print("*************************************")
+                                                    print(slice_nuevo)
+                                                    # slice["estado"] = "ejecutado"
+                                                    print("*************************************")
+                                                else:
+                                                    print("No hay zonas de disponibilidad")
+                                            elif int(tipo) == 2:
+                                                tipo_zona = "openstack"
+                                                lista = o.listar_zonas(tipo_zona)
+                                                if len(lista) > 0:
+                                                    zona = input("Escoja la zona:")
+                                                    for dic in lista:
+                                                        zona_escogida = dic.get(int(zona))
+                                                        if zona_escogida is not None:
+                                                            print(f"Zona escogida: {zona_escogida}")
+                                                            slice["zona"] = {"nombre":zona_escogida}
+                                                            #print(slice)
+                                                    print("Implementando .....")
+                                                    slice_nuevo = sa.create_slice(slice)
+                                                    print("*************************************")
+                                                    print(slice_nuevo)
+                                                    # slice["estado"] = "ejecutado"
+                                                    print("*************************************")
+                                                else:
+                                                    print("No hay zonas de disponibilidad")
+                                            else:
+                                                print("Opción no válida ...")
+
                                     elif slice["estado"] == "ejecutado":
                                         print(f"* Actualizando el slice {slice['nombre']}")
                                         sa.update_slice(slice)
