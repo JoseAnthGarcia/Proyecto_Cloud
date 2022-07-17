@@ -35,7 +35,7 @@ class Conexion:
                 #columna separadas por comas (,)
                 #valores separados por comas (,)
                 query="Insert into "+tabla+"("+columna+")"+" values ("+valores+")"
-                print(query)
+                #print(query)
                 cur.execute(query)
                 id=cur.lastrowid
                 con.commit()

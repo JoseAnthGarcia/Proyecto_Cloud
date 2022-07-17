@@ -4,6 +4,7 @@ from Modules.LinuxClusterDriver import *
 from conf.Conexion import *
 from Modules.Validador import  *
 import json
+import os
 
 class SliceAdministrator:
     def __init__(self):
@@ -55,6 +56,8 @@ class SliceAdministrator:
         #llamar a driver para actualizar
         f = open(f"./Modules/Slices/{slice['nombre']}.json", "w")
         f.write(json.dumps(slice))
+        #print(json.dumps(slice))
+        #f.write(str(json.dumps(slice)))
         f.close()
         print(f"* Slice {slice['nombre']} guardado.")
 
