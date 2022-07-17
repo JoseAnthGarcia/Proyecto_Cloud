@@ -5,6 +5,7 @@ import json
 import os
 from conf.Conexion import *
 import logging
+import schedule
 
 class UserInterface:
     def __init__(self):
@@ -684,7 +685,10 @@ class UserInterface:
                                             sa.save_slice(slice)
                                         elif int(opcion) == 2:
                                             slice["estado"] = "ejecutado"
-                                            sa.create_slice(slice)
+                                            slice_nuevo = sa.create_slice(slice)
+                                            print("*************************************")
+                                            print(slice_nuevo)
+                                            print("*************************************")
                                     elif slice["estado"] == "ejecutado":
                                         print(f"* Actualizando el slice {slice['nombre']}")
                                         sa.update_slice(slice)
