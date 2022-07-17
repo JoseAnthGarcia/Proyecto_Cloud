@@ -364,6 +364,8 @@ class UserInterface:
 
     @staticmethod
     def iniciar_programa():
+        sa = SliceAdministrator()
+        #sa.register_data()
         o = UserInterface()
         while True:
             print('*********************************')
@@ -531,15 +533,17 @@ class UserInterface:
                                                     imagen = dic.pop(int(imagen_escogida))
                                                     if imagen is not None:
                                                         print(f"La imagen que configurará es: {imagen}")
-                                                #info_config = [imagen]
+                                                        info_config = {"nombre": {imagen}, "url": "-"}
                                                 for nodo in nodos:
                                                     #type = {"imagen": info_config}
-                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                    slice["nodos"][nodo]["config"]["imagen"] = info_config
                                             elif int(opcion) == 2:
                                                 print("***************************************")
                                                 print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                 link = input("Ingrese un link:")
-                                                slice["nodos"][nodo]["config"]["imagen"] = link
+                                                nombre = input("Ingrese el nombre:")
+                                                info_config = {"nombre": {nombre}, "url": {link}}
+                                                slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                 imagen = f"desde {link}"
                                             print(f"Se configuró los siguientes nodos {nodos} con flavor: {info_config[0]} e imagen: {imagen}")
 
@@ -564,16 +568,18 @@ class UserInterface:
                                                     imagen = dic.pop(int(imagen_escogida))
                                                     if imagen is not None:
                                                         print(f"La imagen que configurará es: {imagen}")
-                                                # info_config = [imagen]
+                                                        info_config = {"nombre": {imagen}, "url": "-"}
                                                 for nodo in nodos:
                                                     # type = {"imagen": info_config}
-                                                    slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                    slice["nodos"][nodo]["config"]["imagen"] = info_config
                                             elif int(opcion) == 2:
                                                 print("***************************************")
                                                 print(
                                                     "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                 link = input("Ingrese un link:")
-                                                slice["nodos"][nodo]["config"]["imagen"] = link
+                                                nombre = input("Ingrese un nombre:")
+                                                info_config = {"nombre":{nombre},"url":{link}}
+                                                slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                 imagen = f"desde {link}"
                                             print(f"Se configuró los siguientes nodos {nodos} con:")
                                             print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen}")
@@ -622,10 +628,10 @@ class UserInterface:
                                                         imagen = dic.pop(int(imagen_escogida))
                                                         if imagen is not None:
                                                             print(f"La imagen que configurará es: {imagen}")
-                                                    # info_config = [imagen]
+                                                            info_config = {"nombre":{imagen},"url":"-"}
                                                     for nodo in nodos:
                                                         # type = {"imagen": info_config}
-                                                        slice["nodos"][nodo]["config"]["imagen"] = imagen
+                                                        slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                 elif int(opcion) == 2:
                                                     print("***************************************")
                                                     print(

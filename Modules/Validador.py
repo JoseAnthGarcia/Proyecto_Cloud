@@ -63,6 +63,10 @@ class Validador:
         id=id[0]
         #data = conn.Select("ram,vcpu,storage","recursos",f"id_estado = {id[0]}")
         data_actual = validador.obtenerDataActual()
+        print("datos validador")
+        print(data_actual)
+        data_actual=data_actual[0]
+        print(data_actual[nombre])
         data_actual = data_actual[nombre]
         ram_actual = data_actual["ram"]
         vcpu_actual = data_actual["vcpu"]
