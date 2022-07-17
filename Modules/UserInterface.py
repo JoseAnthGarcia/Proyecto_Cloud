@@ -734,7 +734,8 @@ class UserInterface:
                                                         zona_escogida = dic.get(int(zona))
                                                         if zona_escogida is not None:
                                                             print(f"Zona escogida: {zona_escogida}")
-                                                            slice["zona"] = zona_escogida
+                                                            slice["zona"] = {"nombre":zona_escogida}
+                                                            #print(slice)
                                                     print("Implementando .....")
                                                     slice_nuevo = sa.create_slice(slice)
                                                     print("*************************************")
@@ -752,7 +753,8 @@ class UserInterface:
                                                         zona_escogida = dic.get(int(zona))
                                                         if zona_escogida is not None:
                                                             print(f"Zona escogida: {zona_escogida}")
-                                                            slice["zona"] = zona_escogida
+                                                            slice["zona"] = {"nombre":zona_escogida}
+                                                            #print(slice)
                                                     print("Implementando .....")
                                                     slice_nuevo = sa.create_slice(slice)
                                                     print("*************************************")
