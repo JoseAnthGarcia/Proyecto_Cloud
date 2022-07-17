@@ -38,14 +38,14 @@ def linux_driver_main(slice):
     for nodo_key in slice["nodos"]:
         nodo = slice["nodos"][nodo_key]
         #print(nodo["instanciado"])
-        if(nodo["instanciado"]=="False"):
+        if(nodo["instanciado"]=="false"):
             vm_nombre = vm_nombres[nodo_key]
             if nodo["config"]["type"] == "manual":
                 recursos = nodo["config"]["info_config"]
                 vm_recursos = {"vcpu": int(recursos[0]), "ram": int(recursos[1]), "disk":int(recursos[2])}
             else:
-                #   TODO: ver en base de datos el flavor
-                vm_recursos = {}
+                recursos=conn.Select("cpu,ram,storage","flavor","nombre="+"'"+slice["config"]["info_config"]+"'")
+                vm_recursos = {"vcpu": int(recursos[0][0]), "ram": int(recursos[0][1]), "disk":int(recursos[0][2])}
             enlaces=[]
             for i in range(len(nodo["enlaces"])):
                 enlaces.append(vm_nombres[nodo["enlaces"][i]])
@@ -64,7 +64,7 @@ def linux_driver_main(slice):
             result = requests.post("http://10.20.12.58:8081/vm/crear", json= data)
             print(result.json())
             if (result):
-                nodo["instanciado"]="True"
+                nodo["instanciado"]="true"
                 #AGREGAR PARÁMETROS A BD
                 #--------CREACIÓN DE TABLA RECURSOS--------#
                 ram= vm_recursos["ram"]
