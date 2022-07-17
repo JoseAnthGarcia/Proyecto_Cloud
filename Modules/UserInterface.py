@@ -682,18 +682,22 @@ class UserInterface:
                                         sa = SliceAdministrator()
                                         if int(opcion) == 1:
                                             slice["estado"] = "guardado"
+                                            print("*************************************")
+                                            print("Guardando .....")
                                             sa.save_slice(slice)
                                         elif int(opcion) == 2:
-                                            slice["estado"] = "ejecutado"
+                                            print("*************************************")
+                                            print("Implementando .....")
                                             slice_nuevo = sa.create_slice(slice)
                                             print("*************************************")
                                             print(slice_nuevo)
+                                            slice["estado"] = "ejecutado"
                                             print("*************************************")
                                     elif slice["estado"] == "ejecutado":
                                         print(f"* Actualizando el slice {slice['nombre']}")
                                         sa.update_slice(slice)
                                     print("------------------------")
-                                    o.save_changes(slice, from_scratch)
+                                    #o.save_changes(slice, from_scratch)
                                     pass
                                 elif int(opt) == 8:
                                     topo = Topology()
