@@ -1,5 +1,5 @@
 
-from Modules.Scheduler import *
+from Modules.App_Scheduler import *
 from Modules.LinuxClusterDriver import *
 from conf.Conexion import *
 from Modules.Validador import  *
@@ -43,6 +43,9 @@ class SliceAdministrator:
         return message
 
     def update_slice(self, slice):
+
+        sa = SliceAdministrator()
+        sa.register_data()
         #llamar a driver para actualizar
         pass
 
@@ -59,5 +62,8 @@ class SliceAdministrator:
         #validador.registerAllData(server_names)
 
     def create_slice(self, slice):
+        sa = SliceAdministrator()
+        sa.register_data()
         #llamar a driver para actualizar
         pass
+
