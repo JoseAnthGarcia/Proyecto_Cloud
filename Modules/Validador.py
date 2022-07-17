@@ -59,9 +59,9 @@ class Validador:
         validador = Validador()
         conn = Conexion()
         #nombre = "headnode"
-        id = conn.Select("recursos_id_estado","servidor",f"nombre = '{nombre}'")
+        id = conn.Select("id_recurso","servidor",f"nombre = '{nombre}'")
         id=id[0]
-        data = conn.Select("ram,vcpu,storage","recursos",f"id_estado = {id[0]}")
+        #data = conn.Select("ram,vcpu,storage","recursos",f"id_estado = {id[0]}")
         data_actual = validador.obtenerDataActual()
         data_actual = data_actual[nombre]
         ram_actual = data_actual["ram"]

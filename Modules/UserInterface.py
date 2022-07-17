@@ -677,7 +677,7 @@ class UserInterface:
                                         print("*************************************")
                                         print("1. Guardar como borrardor")
                                         print("2. Implementar el slice")
-                                        opcion = input("Escoga la opción:")
+                                        opcion = input("Escoja la opción:")
                                         sa = SliceAdministrator()
                                         if int(opcion) == 1:
                                             slice["estado"] = "guardado"
