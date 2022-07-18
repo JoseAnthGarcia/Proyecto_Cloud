@@ -65,7 +65,7 @@ def linux_driver_main(slice):
                     "vnc_port": vnc_port,
                     "vm_worker_id" : vm_worker_id}
             result = requests.post("http://10.20.12.58:8081/vm/crear", json= data)
-            print(result.json())
+            print("--"+result.json())
             if (result):
                 nodo["instanciado"]="true"
                 #AGREGAR PARÁMETROS A BD
@@ -86,7 +86,7 @@ def linux_driver_main(slice):
                 id_enlace=conn2.Insert("enlace", "nombre,nodo_id_nodo", f"'{enlaces}',{id_nodo}")
                 
             else:
-                print("Falló la creación de la vm "+ data["vm_nombre"])
+                print("Falló la creación de la vm "+ data["vm_token"])
             vnc_port += 1
     #Creamos el flow:
     # worker_list = "-" if len(worker_list)==0 else ",".join(worker_list)
