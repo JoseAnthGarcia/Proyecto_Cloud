@@ -553,10 +553,11 @@ class UserInterface:
                                                 lista,imagen_escogida=o.lista_imagenes()
 
                                                 for dic in lista:
-                                                    imagen = dic.pop(int(imagen_escogida))
+                                                    imagen = dic.get(int(imagen_escogida))
                                                     if imagen is not None:
                                                         print(f"La imagen que configurará es: {imagen}")
                                                         info_config = {"nombre": imagen, "url": "-"}
+                                                        imagen2=imagen
                                                 for nodo in nodos:
                                                     #type = {"imagen": info_config}
                                                     slice["nodos"][nodo]["config"]["imagen"] = info_config
@@ -569,7 +570,7 @@ class UserInterface:
                                                 for nodo in nodos:
                                                     slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                 imagen = f"desde {link}"
-                                            print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor2[0]} e imagen: {imagen}")
+                                            print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor2[0]} e imagen: {imagen2}")
 
                                         elif int(conf_nodos_mode2) == 2:
                                             cpu = input("Indicar el # de CPUs:")
@@ -593,6 +594,7 @@ class UserInterface:
                                                     if imagen is not None:
                                                         print(f"La imagen que configurará es: {imagen}")
                                                         info_config = {"nombre": imagen, "url": "-"}
+                                                        imagen2=imagen
                                                 for nodo in nodos:
                                                     # type = {"imagen": info_config}
                                                     slice["nodos"][nodo]["config"]["imagen"] = info_config
@@ -607,7 +609,7 @@ class UserInterface:
                                                     slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                 imagen = f"desde {link}"
                                             print(f"Se configuró los siguientes nodos {nodos} con:")
-                                            print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen}")
+                                            print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen2}")
                                         else:
                                             print("Opción no válida")
                                     elif int(conf_nodos_mode) == 2:
@@ -654,6 +656,7 @@ class UserInterface:
                                                         if imagen is not None:
                                                             print(f"La imagen que configurará es: {imagen}")
                                                             info_config = {"nombre":imagen,"url":"-"}
+                                                            imagen2=imagen
                                                     for nodo in nodos:
                                                         # type = {"imagen": info_config}
                                                         slice["nodos"][nodo]["config"]["imagen"] = info_config
@@ -667,7 +670,7 @@ class UserInterface:
                                                     for nodo in nodos:
                                                         slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                     imagen = f"desde {link}"
-                                                print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor2[0]} e imagen: {imagen}")
+                                                print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor2[0]} e imagen: {imagen2}")
                                             elif int(conf_nodos_mode2) == 2:
                                                 cpu = input("Indicar el # de CPUs:")
                                                 ram = input("Indicar la capacidad de la memoria RAM en MB:")
@@ -690,6 +693,7 @@ class UserInterface:
                                                         if imagen is not None:
                                                             print(f"La imagen que configurará es: {imagen}")
                                                             info_config = {"nombre":imagen,"url":"-"}
+                                                            imagen2=imagen
                                                     for nodo in nodos:
                                                         # type = {"imagen": info_config}
                                                         slice["nodos"][nodo]["config"]["imagen"] = info_config
@@ -703,7 +707,7 @@ class UserInterface:
                                                         slice["nodos"][nodo]["config"]["imagen"] = info_config
                                                     imagen = f"desde {link}"
                                                 print(f"Se configuró los siguientes nodos {nodos} con:")
-                                                print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen}")
+                                                print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen2}")
                                             else:
                                                 print("Opción no válida")
                                 elif int(opt) == 7:
