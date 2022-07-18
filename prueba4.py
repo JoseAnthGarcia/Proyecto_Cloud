@@ -1,6 +1,23 @@
 import requests
 from conf.Conexion import *
-slice={"nodos": {"n0": {"enlaces": ["n1"], "config": {"type": "manual", "info_config": ["1", "256", "1"], "imagen": "cirros"}, "id_worker": 6, "instanciado":"False"}, "n1": {"enlaces": ["n0", "n2"], "config": {"type": "manual", "info_config": ["1", "256", "1"], "imagen": "cirros"}, "id_worker": 1, "instanciado":"False"}, "n2": {"enlaces": ["n1"], "config": {"type": "manual", "info_config": ["1", "256", "1"], "imagen": "cirros"}, "id_worker": 4,"instanciado":"False"}}, "nombre": "prueba1", "ultimo_nodo": 1, "zona": {"nombre": "Pabellon V"}, "nodo_eliminar":"n0", "mapeo_nombre":{"n0":"ccc","n1":"ddd","n2":"eee"}}
+slice={"nodos": {"n0": {"enlaces": ["n1"], "config": {"type": "manual", "info_config": ["1", "256", "1"], "imagen": "cirros"}, "id_worker": 6, "instanciado":"False"}, "n1": {"enlaces": ["n0", "n2"], "config": {"type": "manual", "info_config": ["1", "256", "1"], "imagen": "cirros"}, "id_worker": 1, "instanciado":"False"}, "n2": {"enlaces": ["n1"], "config": {"type": "manual", "info_config": ["1", "256", "1"], "imagen": "cirros"}, "id_worker": 4,"instanciado":"False"}}, "nombre": "prueba2", "ultimo_nodo": 1, "zona": {"nombre": "Pabellon V"}, "nodo_eliminar":"n0", "mapeo_nombre":{"n0":"ccc","n1":"ddd","n2":"eee"}}
+
+
+
+
+
+
+conn=Conexion()
+recursos=conn.Select("cpu,ram,storage","flavor","nombre="+"'"+"m1.tiny"+"'")
+vm_recursos = {"vcpu": int(recursos[0][0]), "ram": int(recursos[0][1]), "disk":int(recursos[0][2])}
+print(vm_recursos)
+'''
+conn=Conexion()
+id_s=conn.Select("id_slice","slice","nombre='prueba2' limit 1")
+print(id)
+
+if(len(id)==0):
+    print("Hola")
 
 
 
@@ -9,7 +26,7 @@ for n in list(slice["nodos"]):
     nodo["instanciado"]="True"
 
 print(slice)
-'''
+
 
 for nodo in list(slice["nodos"]):
     nombre_vm= slice["mapeo_nombre"][nodo]
@@ -31,3 +48,4 @@ for nodo in list(slice["nodos"]):
         conn2.Delete("enlace","nodo_id_nodo= "+id_nodo_cluster)
 
 '''
+
