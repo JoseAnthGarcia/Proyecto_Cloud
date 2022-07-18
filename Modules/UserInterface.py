@@ -124,7 +124,7 @@ class UserInterface:
         lista=[]
         for nombre in slices:
             i=i+1
-            print(f"{i}. Zona: {nombre[0]}")
+            print(f"{i}. Slice: {nombre[0]}")
             dic = {i: nombre[0]}
             lista.append(dic)
         print("Escriba 'exit' para salir del menú")
@@ -136,14 +136,16 @@ class UserInterface:
         conn = Conexion()
         id=conn.Select("id_slice","slice",f"nombre='{slice}'")
         id=id[0]
-        info_vm = conn.Select("nombre,recursos_id_estado,vnc","vm",f"topologia_id_topologia='{id[0]}'")
+        info_vm = conn.Select("nombre,recursos_id_estado,vnc,servidor_id_servidor","vm",f"topologia_id_topologia='{id[0]}'")
         for vm in info_vm:
             #print(f"Nombre VM: {info_vm[0]}")
             recursos = conn.Select("ram,vcpu,storage","recursos",f"id_recursos={vm[1]}")
+            ip = conn.Select("ip","servidor",f"id_Servidor='{vm[3]}'")
+            ip=ip[0]
             ram = int(recursos[0][0]) #/ 1000000
             disco = int(recursos[0][2]) #/ 1000000
             vnc_port=5900+vm[2]
-            print(f"VM: {vm[0]} - Capacidad: RAM:{str(ram)} MB CPU:{recursos[0][1]} DISCO:{str(disco)} GB - VNC_PORT: {vnc_port}")
+            print(f"VM: {vm[0]} - Capacidad: RAM:{str(ram)} MB CPU:{recursos[0][1]} DISCO:{str(disco)} GB - ACCESO_VNC: {ip[0]}:{vnc_port}")
 
     @staticmethod
     def def_listar_menu2(zona):
