@@ -21,8 +21,11 @@ class SliceAdministrator:
 
 
     def delete_slice(self,slice):
+        print("-----")
+        print(slice)
         conn = Conexion()
-        id = conn.Select("id_slice", "slice", f" nombre = '{slice}'")
+        nombre=slice["nombre"]
+        id = conn.Select("id_slice", "slice", f" nombre = '{nombre}'")
         id=id[0]
         vms= conn.Select("nombre,estado","vm", f" topologia_id_topologia = {id[0]}")
         lista_activo=[]
@@ -37,41 +40,30 @@ class SliceAdministrator:
                 lista_activo.append(vm[0])
 
         if len(lista_inactivo) == len(vms):
-            for vm in vms:
-                conn.Delete("vm", f" topologia_id_topologia = {vm[0]}")
-            conn.Delete("slice", f" nombre = '{slice}'")
+            borrar_slice(slice)
             message = f"Se borró el slice {slice} y sus respectivas VMs"
         else:
             message = f"No se pudo borrar el slice {slice} porque las VMs: {lista_activo} están activas."
         return message
 
     def update_slice(self, slice):
-
         sa = SliceAdministrator()
-        #sa.register_data()
-        #llamar a driver para actualizar
-        pass
+        slice_actualizado = sa.create_topology(slice)
+        return  slice_actualizado
 
     def save_slice(self, slice):
         #llamar a driver para actualizar
         f = open(f"./Modules/Slices/{slice['nombre']}.json", "w")
         f.write(json.dumps(slice))
-        #print(json.dumps(slice))
-        #f.write(str(json.dumps(slice)))
         f.close()
         print(f"* Slice {slice['nombre']} guardado.")
 
     def register_data(self):
         validador = Validador()
         validador.registrarDataCadaMinuto()
-        #server_names = ["Headnode","Worker1,Worker2,Worker3,Worker4,Worker5,Worker6"]
-        #validador.registerAllData(server_names)
-        #server_names = ["Controller", "Compute1,Compute2,Compute3,Compute4,Compute5,Compute6"]
-        #validador.registerAllData(server_names)
 
     def create_slice(self, slice):
         sa = SliceAdministrator()
-        #sa.register_data()
         slice_nuevo = sa.create_topology(slice)
         return slice_nuevo
 

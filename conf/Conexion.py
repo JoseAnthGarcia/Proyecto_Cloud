@@ -22,7 +22,7 @@ class Conexion:
                     cur.execute("Select "+valores+" from " +tabla)
                 else:
                     sql="Select "+valores+" from "+tabla+ " where "+condicion
-                    print(sql)
+                    #print(sql)
                     cur.execute(sql)
                 resultado = cur.fetchall()
         finally:
@@ -51,7 +51,7 @@ class Conexion:
         try:
             with con.cursor() as cur:
                 #valores separados por comas (,)
-                print("Update "+tabla+" set "+valores+" where "+condicion)
+                #print("Update "+tabla+" set "+valores+" where "+condicion)
                 cur.execute("Update "+tabla+" set "+valores+" where "+condicion)
                 con.commit()
         finally:
@@ -110,7 +110,7 @@ class Conexion2():
                     cur.execute("Select "+valores+" from " +tabla)
                 else:
                     sql="Select "+valores+" from "+tabla+ " where "+condicion
-                    print(sql)
+                    #print(sql)
                     cur.execute(sql)
                 resultado = cur.fetchall()
         finally:
@@ -124,7 +124,7 @@ class Conexion2():
                 #columna separadas por comas (,)
                 #valores separados por comas (,)
                 query="Insert into "+tabla+"("+columna+")"+" values ("+valores+")"
-                print(query)
+                #print(query)
                 cur.execute(query)
                 id=cur.lastrowid
                 con.commit()
@@ -139,7 +139,7 @@ class Conexion2():
         try:
             with con.cursor() as cur:
                 #valores separados por comas (,)
-                print("Update "+tabla+" set "+valores+" where "+condicion)
+                #print("Update "+tabla+" set "+valores+" where "+condicion)
                 cur.execute("Update "+tabla+" set "+valores+" where "+condicion)
                 con.commit()
         finally:
