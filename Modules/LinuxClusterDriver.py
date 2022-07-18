@@ -151,7 +151,7 @@ def borrar_slice(slice):
         enlaces_list = enlaces_db[0][0].split(",")
         taps_list = []
         for enlace_nombre in enlaces_list:
-            tap = f"{vm_worker_id[3:]}-{enlace_nombre}"
+            tap = f"{nombre_vm[3:]}-{enlace_nombre}"
             taps_list.append(tap)
         result = requests.get("http://10.20.12.58:8081/vm/borrar?worker_id="+str(vm_worker_id)+"&vm_name="+nombre_vm+"&taps="+str(",".join(taps_list)))
         if (result):
