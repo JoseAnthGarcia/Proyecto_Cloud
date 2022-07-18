@@ -186,7 +186,7 @@ class UserInterface:
         lista = []
         for nombre in slices:
             i = i + 1
-            print(f"{i}. Zona: {nombre[0]}")
+            print(f"{i}. Slice: {nombre[0]}")
             dic = {i: nombre[0]}
             lista.append(dic)
         print("Escriba 'exit' para salir del menú")
@@ -628,7 +628,7 @@ class UserInterface:
                                             for node_name in nodos_dict.keys():
                                                 print(f"- {node_name}")
 
-                                        enlace_opt = input("Indicar nodos que desea borrar en formato 'n1,n2,n3,etc', escriba 'exit' para terminar: ")
+                                        enlace_opt = input("Indicar nodos que desea configurar en formato 'n1,n2,n3,etc', escriba 'exit' para terminar: ")
                                         if enlace_opt == "exit":
                                             break
                                         else:
