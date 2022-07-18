@@ -813,7 +813,7 @@ class UserInterface:
                                     json_slice = json.loads(data)
                                     f.close()
                                     sa= SliceAdministrator()
-                                    message = sa.delete_slice(nombre_slice)
+                                    message = sa.delete_slice(json_slice)
                                     print(message)
                                     print("***********************************")
                 elif option == 2:
