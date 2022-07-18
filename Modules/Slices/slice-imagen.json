@@ -1,1 +1,0 @@
-{"nodos": {"n0": {"enlaces": [], "instanciado": "false", "config": {"type": "flavor", "info_config": "m1.tiny", "imagen": {"nombre": "cirros2", "url": "https://download.cirros-cloud.net/0.5.1/cirros-0.5.1-x86_64-disk.img"}}}}, "nombre": "slice-imagen", "estado": "guardado", "ultimo_nodo": 0, "zona": {"nombre": "Pabellon V"}}
