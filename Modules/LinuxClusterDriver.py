@@ -33,6 +33,9 @@ def linux_driver_main(slice):
     nombre_slice = slice["nombre"]
     if(len(id_s)==0):
         id_slice=conn.Insert("slice", "nombre,tipo,vlan_id,fecha_creacion,fecha_modificacion", f"'{nombre_slice}','linux_cluster',{vlan},now(),now()")
+    else:
+        id_slice=id_s[0][0]
+    #print(id_slice)
     vm_nombres = generar_vm_token(slice["nodos"])
     vnc_port = 1
     worker_list = [] #Para crear el flow
@@ -65,7 +68,7 @@ def linux_driver_main(slice):
                     "vnc_port": vnc_port,
                     "vm_worker_id" : vm_worker_id}
             result = requests.post("http://10.20.12.58:8081/vm/crear", json= data)
-            print("--"+result.json())
+            #print("--"+result.json())
             if (result):
                 nodo["instanciado"]="true"
                 #AGREGAR PARÁMETROS A BD
@@ -77,7 +80,7 @@ def linux_driver_main(slice):
                 
                 id_recursos=conn.Insert("recursos", "ram,storage,vcpu", f"'{ram}','{disk}','{vcpu}'")
 
-                id_vm=conn.Insert("vm", "nombre,estado,fecha_creacion,creado_por,fecha_modificacion,modificado_por,vnc,servidor_id_servidor,topologia_id_topologia,imagen_id_imagen,recursos_id_estado", f"'{nombre}','ACTIVO',now(),1,now(),1,{vnc_port},{vm_worker_id},{id_slice},{id_imagen},{id_recursos}")
+                id_vm=conn.Insert("vm", "nombre,estado,fecha_creacion,creado_por,fecha_modificacion,modificado_por,vnc,servidor_id_servidor,topologia_id_topologia,imagen_id_imagen,recursos_id_estado", f"'{nombre}','ACTIVO',now(),1,now(),1,{vnc_port},{vm_worker_id},{id_slice},{id_imagen[0][0]},{id_recursos}")
 
                 id_nodo=conn2.Insert("nodo", "nombre,tipo,puerto_vnc", f"'{nombre}',1,{vnc_port}")
                 id_ram=conn2.Insert("ram", "memoria_total, creacion, Nodo_id_nodo", f"'{ram}',now(),{id_nodo}")
@@ -91,6 +94,7 @@ def linux_driver_main(slice):
     #Creamos el flow:
     # worker_list = "-" if len(worker_list)==0 else ",".join(worker_list)
     #print("-------------------------------------------------------------------------------------------")
+    slice["estado"]="ejecutado"
     worker_list = ",".join(worker_list)
     flow_data={"vlan_id": vlan, "workers_id": worker_list}
     result = requests.post("http://10.20.12.58:8081/OFS/flows", json= flow_data)
@@ -99,27 +103,30 @@ def linux_driver_main(slice):
     return slice
     
 def borrar_slice(slice):
+    print("---------------------------")
+    print(slice)
     for nodo in list(slice["nodos"]):
+        print(nodo)
         nombre_vm= slice["mapeo_nombre"][nodo]
         vm_worker_id = slice["nodos"][nodo]["id_worker"]
         nombre_nodo=nodo
-        #print(nombre_vm)
-        #print(vm_worker_id)
+        print(nombre_vm)
+        print(vm_worker_id)
         conn2=Conexion2()
         id_nodo_cluster=conn2.Select("id_nodo","nodo","nombre= "+"'"+nombre_vm+"'")
-        taps=conn2.Select("nombre","enlace","nodo_id_nodo= "+id_nodo_cluster)
-        result = requests.get("http://10.20.12.58:8081/vm/borrar?worker_id="+vm_worker_id+"&vm_name="+nombre_vm+"&taps="+taps)
+        taps=conn2.Select("nombre","enlace","nodo_id_nodo= "+id_nodo_cluster[0][0])
+        result = requests.get("http://10.20.12.58:8081/vm/borrar?worker_id="+vm_worker_id+"&vm_name="+nombre_vm+"&taps="+taps[0][0])
         if (result):
             conn= Conexion()
             id_nodo_general= conn.Select("id_vm","vm","nombre= "+"'"+nombre_vm+"'")
             id_recurso_general= conn.Select("recursos_id_estado","vm","nombre= "+"'"+nombre_vm+"'")
-            conn.Delete("recursos","id_recursos= "+id_recurso_general)
-            conn.Delete("vm","id_vm= "+id_nodo_general)
+            conn.Delete("recursos","id_recursos= "+id_recurso_general[0][0])
+            conn.Delete("vm","id_vm= "+id_nodo_general[0][0])
             conn.Delete("slice", "nombre= "+"'"+slice["nombre"]+"'")
-            conn2.Delete("enlace","nodo_id_nodo= "+id_nodo_cluster)
-            conn2.Delete("vcpu","Nodo_id_nodo= "+id_nodo_cluster)
-            conn2.Delete("cpu","Nodo_id_nodo= "+id_nodo_cluster)
-            conn2.Delete("ram","Nodo_id_nodo= "+id_nodo_cluster)
+            conn2.Delete("enlace","nodo_id_nodo= "+id_nodo_cluster[0][0])
+            conn2.Delete("vcpu","Nodo_id_nodo= "+id_nodo_cluster[0][0])
+            conn2.Delete("cpu","Nodo_id_nodo= "+id_nodo_cluster[0][0])
+            conn2.Delete("ram","Nodo_id_nodo= "+id_nodo_cluster[0][0])
             conn2.Delete("nodo", "nombre= "+"'"+nombre_vm+"'")
             
 

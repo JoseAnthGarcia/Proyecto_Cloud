@@ -7,11 +7,16 @@ slice={"nodos": {"n0": {"enlaces": ["n1"], "config": {"type": "manual", "info_co
 
 
 
-conn=Conexion()
+conn2=Conexion2()
+
+taps=conn2.Select("nombre","enlace","nodo_id_nodo= "+"2")
+print(taps)
+
+'''
 recursos=conn.Select("cpu,ram,storage","flavor","nombre="+"'"+"m1.tiny"+"'")
 vm_recursos = {"vcpu": int(recursos[0][0]), "ram": int(recursos[0][1]), "disk":int(recursos[0][2])}
 print(vm_recursos)
-'''
+
 conn=Conexion()
 id_s=conn.Select("id_slice","slice","nombre='prueba2' limit 1")
 print(id)
