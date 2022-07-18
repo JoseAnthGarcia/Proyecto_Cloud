@@ -720,7 +720,7 @@ class UserInterface:
                                     slice["ultimo_nodo"] = prox_node-1
                                     print("------Data a enviar-----")
                                     print(slice)
-                                    slice["estado"] = "guardado"
+                                    #slice["estado"] = "guardado"
                                     if slice["estado"] == "guardado":
                                         print("*************************************")
                                         print("1. Guardar como borrardor")
