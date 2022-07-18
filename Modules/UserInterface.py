@@ -740,7 +740,9 @@ class UserInterface:
                                                             slice["zona"] = {"nombre":zona_escogida}
                                                             #print(slice)
                                                     print("Implementando .....")
+                                                    sa.save_slice(slice)
                                                     slice_nuevo = sa.create_slice(slice)
+
                                                     print("*************************************")
                                                     print(slice_nuevo)
                                                     # slice["estado"] = "ejecutado"
@@ -805,7 +807,11 @@ class UserInterface:
                                 elif int(confirma_borrado) == 1:
                                     #o.def_borrar_menu2(slice)
                                     print("***********************************")
-                                    #print("Data enviada a Administrador de slice = ")
+                                    f = open(f"./Modules/Slices/{nombre_slice}.json")
+                                    data=f.readlines()
+                                    data=data[0]
+                                    json_slice = json.loads(data)
+                                    f.close()
                                     sa= SliceAdministrator()
                                     message = sa.delete_slice(nombre_slice)
                                     print(message)

@@ -22,7 +22,7 @@ class Conexion:
                     cur.execute("Select "+valores+" from " +tabla)
                 else:
                     sql="Select "+valores+" from "+tabla+ " where "+condicion
-                    print(sql)
+                    #print(sql)
                     cur.execute(sql)
                 resultado = cur.fetchall()
         finally:
