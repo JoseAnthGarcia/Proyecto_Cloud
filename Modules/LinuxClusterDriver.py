@@ -5,6 +5,7 @@ import requests
 from conf.Conexion import *
 from Modules.SliceAdministrator import *
 from datetime import datetime
+import json
 
 def generador_mac():
     return "02:%02x:%02x:%02x:%02x:%02x" % (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
