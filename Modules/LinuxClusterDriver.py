@@ -43,7 +43,17 @@ def linux_driver_main(slice):
         nodo = slice["nodos"][nodo_key]
         #print(nodo["instanciado"])
         print(nodo["config"]["imagen"]["nombre"])
-        id_imagen= conn.Select("id_imagen","imagen","nombre="+"'"+nodo["config"]["imagen"]["nombre"]+"'"+"limit 1")
+
+        if ((nodo["config"]["imagen"]["url"])=="-"):
+            id_i= conn.Select("id_imagen","imagen","nombre="+"'"+nodo["config"]["imagen"]["nombre"]+"'"+"limit 1")
+            id_imagen=id_i[0][0]
+        else:
+            imagen_nombre=nodo["config"]["imagen"]["nombre"]
+            id_i= conn.Select("id_imagen","imagen","nombre="+"'"+nodo["config"]["imagen"]["nombre"]+"'"+"limit 1")
+            id_imagen=id_i[0][0]
+            if (len(id_i)==0):
+                id_imagen=conn.Insert("imagen", "nombre,fecha_creacion", f"'{imagen_nombre}',now()")
+        
         if(nodo["instanciado"]=="false"):
             vm_nombre = vm_nombres[nodo_key]
             if nodo["config"]["type"] == "manual":
@@ -77,6 +87,7 @@ def linux_driver_main(slice):
                 nodo["instanciado"]="true"
                 #AGREGAR PARÁMETROS A BD
                 #--------CREACIÓN DE TABLA RECURSOS--------#
+                print(vm_recursos)
                 ram= vm_recursos["ram"]
                 disk=vm_recursos["disk"]
                 vcpu=vm_recursos["vcpu"]
@@ -85,7 +96,7 @@ def linux_driver_main(slice):
                 conn.Update("servidor","max_vnc= "+str((vnc_port)),"id_servidor= "+str(vm_worker_id))
                 id_recursos=conn.Insert("recursos", "ram,storage,vcpu", f"'{ram}','{disk}','{vcpu}'")
 
-                id_vm=conn.Insert("vm", "nombre,estado,fecha_creacion,creado_por,fecha_modificacion,modificado_por,vnc,servidor_id_servidor,topologia_id_topologia,imagen_id_imagen,recursos_id_estado", f"'{nombre}','ACTIVO',now(),1,now(),1,{vnc_port},{vm_worker_id},{id_slice},{id_imagen[0][0]},{id_recursos}")
+                id_vm=conn.Insert("vm", "nombre,estado,fecha_creacion,creado_por,fecha_modificacion,modificado_por,vnc,servidor_id_servidor,topologia_id_topologia,imagen_id_imagen,recursos_id_estado", f"'{nombre}','ACTIVO',now(),1,now(),1,{vnc_port},{vm_worker_id},{id_slice},{id_imagen},{id_recursos}")
 
                 id_nodo=conn2.Insert("nodo", "nombre,tipo,puerto_vnc", f"'{nombre}',1,{vnc_port}")
                 id_ram=conn2.Insert("ram", "memoria_total, creacion, Nodo_id_nodo", f"'{ram}',now(),{id_nodo}")
@@ -110,29 +121,37 @@ def linux_driver_main(slice):
 def borrar_slice(slice):
     print("---------------------------")
     print(slice)
+    conn= Conexion()
+    id_s=conn.Select("id_slice","slice","nombre="+"'"+slice["nombre"]+"'")
+    vms=conn.Select("nombre,servidor_id_servidor","vm","topologia_id_topologia= "+str(id_s[0][0]))
+    print(vms)
+    i=0
     for nodo in list(slice["nodos"]):
         print(nodo)
-        nombre_vm= slice["mapeo_nombre"][nodo]
-        vm_worker_id = slice["nodos"][nodo]["id_worker"]
+        nombre_vm= vms[i][0]
+        vm_worker_id = vms[i][1]
         nombre_nodo=nodo
         print(nombre_vm)
         print(vm_worker_id)
         conn2=Conexion2()
         id_nodo_cluster=conn2.Select("id_nodo","nodo","nombre= "+"'"+nombre_vm+"'")
-        taps=conn2.Select("nombre","enlace","nodo_id_nodo= "+id_nodo_cluster[0][0])
-        result = requests.get("http://10.20.12.58:8081/vm/borrar?worker_id="+vm_worker_id+"&vm_name="+nombre_vm+"&taps="+taps[0][0])
+        taps=conn2.Select("nombre","enlace","nodo_id_nodo= "+str(id_nodo_cluster[0][0]))
+        result = requests.get("http://10.20.12.58:8081/vm/borrar?worker_id="+str(vm_worker_id)+"&vm_name="+nombre_vm+"&taps="+str(taps[0][0]))
         if (result):
-            conn= Conexion()
+            
             id_nodo_general= conn.Select("id_vm","vm","nombre= "+"'"+nombre_vm+"'")
             id_recurso_general= conn.Select("recursos_id_estado","vm","nombre= "+"'"+nombre_vm+"'")
-            conn.Delete("recursos","id_recursos= "+id_recurso_general[0][0])
-            conn.Delete("vm","id_vm= "+id_nodo_general[0][0])
-            conn.Delete("slice", "nombre= "+"'"+slice["nombre"]+"'")
-            conn2.Delete("enlace","nodo_id_nodo= "+id_nodo_cluster[0][0])
-            conn2.Delete("vcpu","Nodo_id_nodo= "+id_nodo_cluster[0][0])
-            conn2.Delete("cpu","Nodo_id_nodo= "+id_nodo_cluster[0][0])
-            conn2.Delete("ram","Nodo_id_nodo= "+id_nodo_cluster[0][0])
-            conn2.Delete("nodo", "nombre= "+"'"+nombre_vm+"'")
+            conn.Delete("vm","id_vm= "+str(id_nodo_general[0][0]))
+            conn.Delete("recursos","id_recursos= "+str(id_recurso_general[0][0]))
+            
+            conn2.Delete("enlace","nodo_id_nodo= "+str(id_nodo_cluster[0][0]))
+            conn2.Delete("vcpu","Nodo_id_nodo= "+str(id_nodo_cluster[0][0]))
+            conn2.Delete("cpu","Nodo_id_nodo= "+str(id_nodo_cluster[0][0]))
+            conn2.Delete("ram","Nodo_id_nodo= "+str(id_nodo_cluster[0][0]))
+            
+            i=i+1
+    conn.Delete("slice", "nombre= "+"'"+slice["nombre"]+"'")
+    conn2.Delete("nodo", "nombre= "+"'"+nombre_vm+"'")
             
 
     

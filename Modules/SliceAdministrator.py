@@ -21,8 +21,11 @@ class SliceAdministrator:
 
 
     def delete_slice(self,slice):
+        print("-----")
+        print(slice)
         conn = Conexion()
-        id = conn.Select("id_slice", "slice", f" nombre = '{slice}'")
+        nombre=slice["nombre"]
+        id = conn.Select("id_slice", "slice", f" nombre = '{nombre}'")
         id=id[0]
         vms= conn.Select("nombre,estado","vm", f" topologia_id_topologia = {id[0]}")
         lista_activo=[]
