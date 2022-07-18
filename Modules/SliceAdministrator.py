@@ -37,9 +37,7 @@ class SliceAdministrator:
                 lista_activo.append(vm[0])
 
         if len(lista_inactivo) == len(vms):
-            for vm in vms:
-                conn.Delete("vm", f" topologia_id_topologia = {vm[0]}")
-            conn.Delete("slice", f" nombre = '{slice}'")
+            borrar_slice(slice)
             message = f"Se borró el slice {slice} y sus respectivas VMs"
         else:
             message = f"No se pudo borrar el slice {slice} porque las VMs: {lista_activo} están activas."
