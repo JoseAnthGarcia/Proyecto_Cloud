@@ -774,6 +774,7 @@ class UserInterface:
                                     elif slice["estado"] == "ejecutado":
                                         print(f"* Actualizando el slice {slice['nombre']}")
                                         slice_actualizado = sa.update_slice(slice)
+                                        sa.save_slice(slice_actualizado)
                                         print(slice_actualizado)
                                     print("------------------------")
                                     #o.save_changes(slice, from_scratch)
