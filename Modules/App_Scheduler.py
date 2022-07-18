@@ -1,6 +1,6 @@
 import pymysql
 import requests
-
+from conf.Conexion import *
 lista_worker_general_filtrada=[]
 
 class Worker:
@@ -107,6 +107,7 @@ def ordenamiento_coeficiente(lista_worker_general_filtrada,vm):
 
 
 def scheduler_main(data, FACTOR):
+    conn = Conexion()
     #Actualizamos los valores en base de datos: mas adelante esto lo hara el validador
     # x = requests.get('http://10.20.12.58:8081/cpu-metrics')
     #VCPU-RAM-STORAGE
@@ -118,6 +119,11 @@ def scheduler_main(data, FACTOR):
             ram=nodos[nodo_key]['config']['info_config'][1]
             storage=nodos[nodo_key]['config']['info_config'][2]
             vm=Vm(nodo_key ,int(ram),int(storage),int(vcpu))
+            lista_vm_topologia.append(vm)
+        else:
+            recursos=conn.Select("cpu,ram,storage","flavor","nombre="+"'"+nodos[nodo_key]["config"]["info_config"]+"'")
+            vm_recursos = {"vcpu": int(recursos[0][0]), "ram": int(recursos[0][1]), "disk":int(recursos[0][2])}
+            vm=Vm(nodo_key ,vm_recursos["ram"],vm_recursos["disk"],vm_recursos["vcpu"])
             lista_vm_topologia.append(vm)
 
     zona_disponibilidad= data['zona']['nombre']
