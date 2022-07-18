@@ -37,7 +37,7 @@ def linux_driver_main(slice):
         id_slice=id_s[0][0]
     #print(id_slice)
     vm_nombres = generar_vm_token(slice["nodos"])
-    vnc_port = 1
+    
     worker_list = [] #Para crear el flow
     for nodo_key in slice["nodos"]:
         nodo = slice["nodos"][nodo_key]
@@ -57,6 +57,10 @@ def linux_driver_main(slice):
                 enlaces.append(vm_nombres[nodo["enlaces"][i]])
             imagen = nodo["config"]["imagen"]
             vm_worker_id = nodo["id_worker"]
+            print(type(vm_worker_id))
+            max_vnc=conn.Select("max_vnc","servidor","id_servidor= "+str(vm_worker_id))
+            vnc_port = max_vnc[0][0]+1
+
             if str(vm_worker_id) not in worker_list:
                 worker_list.append(str(vm_worker_id))
             enlaces = ",".join(enlaces)
@@ -78,6 +82,7 @@ def linux_driver_main(slice):
                 vcpu=vm_recursos["vcpu"]
                 nombre="vm-"+data["vm_token"]
                 
+                conn.Update("servidor","max_vnc= "+str((vnc_port)),"id_servidor= "+str(vm_worker_id))
                 id_recursos=conn.Insert("recursos", "ram,storage,vcpu", f"'{ram}','{disk}','{vcpu}'")
 
                 id_vm=conn.Insert("vm", "nombre,estado,fecha_creacion,creado_por,fecha_modificacion,modificado_por,vnc,servidor_id_servidor,topologia_id_topologia,imagen_id_imagen,recursos_id_estado", f"'{nombre}','ACTIVO',now(),1,now(),1,{vnc_port},{vm_worker_id},{id_slice},{id_imagen[0][0]},{id_recursos}")
