@@ -147,8 +147,13 @@ def borrar_slice(slice):
         print(vm_worker_id)
         conn2=Conexion2()
         id_nodo_cluster=conn2.Select("id_nodo","nodo","nombre= "+"'"+nombre_vm+"'")
-        taps=conn2.Select("nombre","enlace","nodo_id_nodo= "+str(id_nodo_cluster[0][0]))
-        result = requests.get("http://10.20.12.58:8081/vm/borrar?worker_id="+str(vm_worker_id)+"&vm_name="+nombre_vm+"&taps="+str(taps[0][0]))
+        enlaces_db=conn2.Select("nombre","enlace","nodo_id_nodo= "+str(id_nodo_cluster[0][0]))
+        enlaces_list = enlaces_db[0][0].split(",")
+        taps_list = []
+        for enlace_nombre in enlaces_list:
+            tap = f"{vm_worker_id[3:]}-{enlace_nombre}"
+            taps_list.append(tap)
+        result = requests.get("http://10.20.12.58:8081/vm/borrar?worker_id="+str(vm_worker_id)+"&vm_name="+nombre_vm+"&taps="+str(",".join(taps_list)))
         if (result):
             
             id_nodo_general= conn.Select("id_vm","vm","nombre= "+"'"+nombre_vm+"'")
