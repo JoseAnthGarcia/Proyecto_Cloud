@@ -750,8 +750,9 @@ class UserInterface:
                                                             slice["zona"] = {"nombre":zona_escogida}
                                                             #print(slice)
                                                     print("Implementando .....")
-                                                    sa.save_slice(slice)
+
                                                     slice_nuevo = sa.create_slice(slice)
+                                                    sa.save_slice(slice)
 
                                                     print("*************************************")
                                                     print(slice_nuevo)
@@ -772,6 +773,7 @@ class UserInterface:
                                                             #print(slice)
                                                     print("Implementando .....")
                                                     slice_nuevo = sa.create_slice(slice)
+                                                    sa.save_slice(slice)
                                                     print("*************************************")
                                                     print(slice_nuevo)
                                                     # slice["estado"] = "ejecutado"
