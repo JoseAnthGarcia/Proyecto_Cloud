@@ -77,7 +77,7 @@ class UserInterface:
     def def_zona_disponibilidad_menu3(tipo):
         print('*********************************')
         conn = Conexion()
-        server = conn.Select("nombre", "servidor",f"id_zona < 0 && descripcion = '{tipo}'")
+        server = conn.Select("nombre", "servidor",f"id_zona is null  && descripcion = '{tipo}'")
         #server = conn.Select("nombre", "servidor", "-1")
         i=0
         lista=[]
