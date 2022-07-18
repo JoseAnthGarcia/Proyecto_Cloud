@@ -590,7 +590,7 @@ class UserInterface:
                                                 lista, imagen_escogida = o.lista_imagenes()
 
                                                 for dic in lista:
-                                                    imagen = dic.pop(int(imagen_escogida))
+                                                    imagen = dic.get(int(imagen_escogida))
                                                     if imagen is not None:
                                                         print(f"La imagen que configurará es: {imagen}")
                                                         info_config = {"nombre": imagen, "url": "-"}
@@ -652,7 +652,7 @@ class UserInterface:
                                                     lista, imagen_escogida = o.lista_imagenes()
 
                                                     for dic in lista:
-                                                        imagen = dic.pop(int(imagen_escogida))
+                                                        imagen = dic.get(int(imagen_escogida))
                                                         if imagen is not None:
                                                             print(f"La imagen que configurará es: {imagen}")
                                                             info_config = {"nombre":imagen,"url":"-"}
@@ -689,7 +689,7 @@ class UserInterface:
                                                     lista, imagen_escogida = o.lista_imagenes()
 
                                                     for dic in lista:
-                                                        imagen = dic.pop(int(imagen_escogida))
+                                                        imagen = dic.get(int(imagen_escogida))
                                                         if imagen is not None:
                                                             print(f"La imagen que configurará es: {imagen}")
                                                             info_config = {"nombre":imagen,"url":"-"}
