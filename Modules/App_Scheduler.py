@@ -87,8 +87,8 @@ def ordenamiento_coeficiente(lista_worker_general_filtrada,vm):
         if (worker.ram_disponible >= vm.ram_requerida and worker.disco_disponible >= vm.disco_requerido and worker.vcpu_disponible >= vm.vcpu_requeridas):
             worker_elegido = worker
             worker_nuevo = worker_elegido
-            ram_disponible_new= worker.ram_disponible - vm.ram_requerida
-            disco_disponible_new = worker.disco_disponible - vm.disco_requerido
+            ram_disponible_new= worker.ram_disponible - (vm.ram_requerida*1048576)
+            disco_disponible_new = worker.disco_disponible - (vm.disco_requerido*1073741824)
             vcpu_total_new= worker.vcpu_disponible - vm.vcpu_requeridas
             worker_nuevo.ram_disponible=ram_disponible_new
             worker_nuevo.disco_disponible=disco_disponible_new
