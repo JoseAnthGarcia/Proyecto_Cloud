@@ -828,6 +828,8 @@ class UserInterface:
                                     f.close()
                                     sa= SliceAdministrator()
                                     message = sa.delete_slice(json_slice)
+                                    json_slice["estado"] = "guardado"
+                                    sa.save_slice(json_slice)
                                     print(message)
                                     print("***********************************")
                 elif option == 2:
