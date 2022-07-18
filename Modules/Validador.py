@@ -15,6 +15,7 @@ class Validador:
     def validar_recursos(self, nombre,recursos):
         validador= Validador()
         data_actual = validador.obtenerDataActual()
+        data_actual=data_actual[0]
         data_actual = data_actual[nombre]
         ram_actual = data_actual["ram"]
         vcpu_actual = data_actual["vcpu"]
