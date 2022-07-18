@@ -3,7 +3,9 @@ import random
 import secrets as s
 import requests
 from conf.Conexion import *
+from Modules.SliceAdministrator import *
 from datetime import datetime
+import json
 
 def generador_mac():
     return "02:%02x:%02x:%02x:%02x:%02x" % (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -50,9 +52,12 @@ def linux_driver_main(slice):
         else:
             imagen_nombre=nodo["config"]["imagen"]["nombre"]
             id_i= conn.Select("id_imagen","imagen","nombre="+"'"+nodo["config"]["imagen"]["nombre"]+"'"+"limit 1")
-            id_imagen=id_i[0][0]
+            
             if (len(id_i)==0):
                 id_imagen=conn.Insert("imagen", "nombre,fecha_creacion", f"'{imagen_nombre}',now()")
+            else:
+                id_imagen=id_i[0][0]
+
         
         if(nodo["instanciado"]=="false"):
             vm_nombre = vm_nombres[nodo_key]
@@ -82,7 +87,7 @@ def linux_driver_main(slice):
                     "vnc_port": vnc_port,
                     "vm_worker_id" : vm_worker_id}
             result = requests.post("http://10.20.12.58:8081/vm/crear", json= data)
-            #print("--"+result.json())
+            print(result.json())
             if (result):
                 nodo["instanciado"]="true"
                 #AGREGAR PARÁMETROS A BD
@@ -115,6 +120,13 @@ def linux_driver_main(slice):
     flow_data={"vlan_id": vlan, "workers_id": worker_list}
     result = requests.post("http://10.20.12.58:8081/OFS/flows", json= flow_data)
     slice["mapeo_nombres"] = vm_nombres
+    #sliceobj=SliceAdministrator()
+    #sliceobj.save_slice(slice)
+    f = open(f"./Modules/Slices/{slice['nombre']}.json", "w")
+    f.write(json.dumps(slice))
+    f.close()
+    #print(f"* Slice {slice['nombre']} guardado.")
+
     print (slice)
     return slice
     
