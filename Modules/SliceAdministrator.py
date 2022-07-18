@@ -47,32 +47,23 @@ class SliceAdministrator:
         return message
 
     def update_slice(self, slice):
-
         sa = SliceAdministrator()
-        #sa.register_data()
-        #llamar a driver para actualizar
-        pass
+        slice_actualizado = sa.create_topology(slice)
+        return  slice_actualizado
 
     def save_slice(self, slice):
         #llamar a driver para actualizar
         f = open(f"./Modules/Slices/{slice['nombre']}.json", "w")
         f.write(json.dumps(slice))
-        #print(json.dumps(slice))
-        #f.write(str(json.dumps(slice)))
         f.close()
         print(f"* Slice {slice['nombre']} guardado.")
 
     def register_data(self):
         validador = Validador()
         validador.registrarDataCadaMinuto()
-        #server_names = ["Headnode","Worker1,Worker2,Worker3,Worker4,Worker5,Worker6"]
-        #validador.registerAllData(server_names)
-        #server_names = ["Controller", "Compute1,Compute2,Compute3,Compute4,Compute5,Compute6"]
-        #validador.registerAllData(server_names)
 
     def create_slice(self, slice):
         sa = SliceAdministrator()
-        #sa.register_data()
         slice_nuevo = sa.create_topology(slice)
         return slice_nuevo
 
