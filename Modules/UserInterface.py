@@ -566,10 +566,11 @@ class UserInterface:
                                                 print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                 link = input("Ingrese un link:")
                                                 nombre = input("Ingrese el nombre:")
+                                                imagen2=nombre
                                                 info_config = {"nombre": nombre, "url": link}
                                                 for nodo in nodos:
                                                     slice["nodos"][nodo]["config"]["imagen"] = info_config
-                                                imagen = f"desde {link}"
+                                                imagen2 = imagen2+f" desde {link}"
                                             print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor2[0]} e imagen: {imagen2}")
 
                                         elif int(conf_nodos_mode2) == 2:
@@ -604,10 +605,11 @@ class UserInterface:
                                                     "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                 link = input("Ingrese un link:")
                                                 nombre = input("Ingrese un nombre:")
+                                                imagen2=nombre
                                                 info_config = {"nombre":nombre,"url":link}
                                                 for nodo in nodos:
                                                     slice["nodos"][nodo]["config"]["imagen"] = info_config
-                                                imagen = f"desde {link}"
+                                                imagen2 = imagen2+f" desde {link}"
                                             print(f"Se configuró los siguientes nodos {nodos} con:")
                                             print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen2}")
                                         else:
@@ -666,10 +668,11 @@ class UserInterface:
                                                         "* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                     link = input("Ingrese un link:")
                                                     nombre = input("Ingrese un nombre:")
-                                                    info_config={"nombre": imagen, "url": "-"}
+                                                    imagen2=nombre
+                                                    info_config={"nombre": nombre, "url": "-"}
                                                     for nodo in nodos:
                                                         slice["nodos"][nodo]["config"]["imagen"] = info_config
-                                                    imagen = f"desde {link}"
+                                                    imagen2 = imagen2+ f" desde {link}"
                                                 print(f"Se configuró los siguientes nodos {nodos} con flavor: {flavor2[0]} e imagen: {imagen2}")
                                             elif int(conf_nodos_mode2) == 2:
                                                 cpu = input("Indicar el # de CPUs:")
@@ -702,10 +705,11 @@ class UserInterface:
                                                     print("* Puede importar una imagen desde: https://docs.google.com/document/d/1htiLHrXIsEkm9U_b201QaSHzYYCZjQHyMa2cDii7QSE/edit?usp=sharing)")
                                                     link = input("Ingrese un link:")
                                                     nombre = input("Ingrese un nombre:")
+                                                    imagen2=nombre
                                                     info_config={"nombre":nombre,"url":link}
                                                     for nodo in nodos:
                                                         slice["nodos"][nodo]["config"]["imagen"] = info_config
-                                                    imagen = f"desde {link}"
+                                                    imagen2 = imagen2 + f" desde {link}"
                                                 print(f"Se configuró los siguientes nodos {nodos} con:")
                                                 print(f"RAM: {ram} , CPU: {cpu}, DISCO: {disco} e imagen: {imagen2}")
                                             else:
