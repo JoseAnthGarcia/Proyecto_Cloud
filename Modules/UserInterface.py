@@ -5,6 +5,7 @@ import json
 import os
 from conf.Conexion import *
 import logging
+import math
 import schedule
 
 class UserInterface:
@@ -49,7 +50,9 @@ class UserInterface:
             for server in servers:
                 recurso = conn.Select("ram_available,vcpu_available,storage_available","recursos",f"id_recursos={server[1]}")
                 recurso = recurso[0]
-                message = message + f"{server[0]} RAM: {recurso[0]} CPU: {recurso[1]} DISCO: {recurso[2]}"
+                ram = round(int(recurso[0])/1000000,2)
+                disco = round(int(recurso[2])/1000000000,2)
+                message = message + f" ( {server[0]} RAM: {str(ram)} MB CPU: {recurso[1]} DISCO: {str(disco)} GB ) "
                 #print(f"{i}. {zona[0]} : {server[0]} RAM: {recurso[0]} CPU: {recurso[1]} DISCO: {recurso[2]}")
             print(message)
             dic = {i: zona[0]}
