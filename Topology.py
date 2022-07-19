@@ -194,14 +194,21 @@ class Topology:
     def draw_topology(self, slice):
         net = Network("100%","100%")
         nodos = slice["nodos"]
+        mapeo_nombre = slice.get("mapeo_nombres")
         nodos_listos = []
         for nodo_name in nodos:
             if nodo_name not in nodos_listos:
-                net.add_node(nodo_name)
+                instanciado = nodos[nodo_name]["instanciado"] == "true"
+                nodo_nombre = f"vm-{nodo_name if not instanciado else mapeo_nombre[nodo_name]}"
+                net.font_color = "#00ff00" if nodos[nodo_name]["instanciado"] == "true" else "#ff0000"
+                net.add_node(nodo_nombre, shape="image", color="#ffffff", image="https://www.nicepng.com/png/full/118-1187674_computer-pc-clipart-computer-application-computer-svg.png")
                 enlaces = nodos[nodo_name]["enlaces"]
                 for nodo_enlace in enlaces:
                     if nodo_enlace not in nodos_listos:
-                        net.add_node(nodo_enlace)
-                    net.add_edge(nodo_name,nodo_enlace)
+                        instanciado = nodos[nodo_enlace]["instanciado"] == "true"
+                        nodo_enlace_nombre = f"vm-{nodo_enlace if not instanciado else mapeo_nombre[nodo_enlace]}"
+                        net.font_color = "#00ff00" if nodos[nodo_enlace]["instanciado"] == "true" else "#ff0000"
+                        net.add_node(nodo_enlace_nombre, shape="image", color="#ffffff", image="https://www.nicepng.com/png/full/118-1187674_computer-pc-clipart-computer-application-computer-svg.png")
+                    net.add_edge(nodo_nombre, nodo_enlace_nombre)
         net.show('nx.html')
 

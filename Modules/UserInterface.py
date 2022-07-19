@@ -450,7 +450,8 @@ class UserInterface:
                                         nodos_dict = slice["nodos"]
                                         i = 1
                                         for node_name in nodos_dict.keys():
-                                            print(f"- {node_name}")
+                                            instanciado = nodos_dict[node_name]["instanciado"] == "true"
+                                            print(f"-{node_name}: {node_name if not instanciado else slice['mapeo_nombres'][node_name]}")
                                             i += 1
                                         link = input("Indicar nodos en formato 'n1-n2', escriba 'exit' para terminar: ")
                                         if link == "exit":

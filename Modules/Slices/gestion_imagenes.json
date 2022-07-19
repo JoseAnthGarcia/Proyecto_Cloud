@@ -1,1 +1,0 @@
-{"nodos": {"n0": {"enlaces": [], "instanciado": "true", "config": {"type": "flavor", "info_config": "m1.tiny", "imagen": {"nombre": "cirros1", "url": "https://download.cirros-cloud.net/0.5.1/cirros-0.5.1-x86_64-disk.img"}}, "id_worker": 3}}, "nombre": "gestion_imagenes", "estado": "ejecutado", "ultimo_nodo": 0, "zona": {"nombre": "Pabellon V"}, "mapeo_nombres": {"n0": "a540a1"}}
