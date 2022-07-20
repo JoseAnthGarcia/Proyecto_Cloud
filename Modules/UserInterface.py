@@ -1,6 +1,7 @@
 from Modules.SliceAdministrator import SliceAdministrator
 from Topology import *
 from Modules.UserInterface import *
+from Modules.OpenStackDriver import *
 import json
 import os
 from conf.Conexion import *
@@ -752,17 +753,19 @@ class UserInterface:
                                                             #print(slice)
                                                     print("Implementando .....")
 
-                                                    slice_nuevo = sa.create_slice(slice)
+                                                    slice_nuevo = sa.create_slice(slice,"1")
                                                     sa.save_slice(slice)
 
                                                     print("*************************************")
                                                     print(slice_nuevo)
                                                     # slice["estado"] = "ejecutado"
+                                                    print("Slice " + slice_nuevo["nombre"] + " IMPLEMENTADO EXITOSAMENTE!")
                                                     print("*************************************")
                                                 else:
                                                     print("No hay zonas de disponibilidad")
                                             elif int(tipo) == 2:
                                                 tipo_zona = "openstack"
+                                                info_computes()
                                                 lista = o.listar_zonas(tipo_zona)
                                                 if len(lista) > 0:
                                                     zona = input("Escoja la zona:")
@@ -773,10 +776,11 @@ class UserInterface:
                                                             slice["zona"] = {"nombre":zona_escogida}
                                                             #print(slice)
                                                     print("Implementando .....")
-                                                    slice_nuevo = sa.create_slice(slice)
+                                                    slice_nuevo = sa.create_slice(slice,"2")
                                                     sa.save_slice(slice)
                                                     print("*************************************")
                                                     print(slice_nuevo)
+                                                    print("Slice " + slice_nuevo["nombre"] + " IMPLEMENTADO EXITOSAMENTE!")
                                                     # slice["estado"] = "ejecutado"
                                                     print("*************************************")
                                                 else:
@@ -786,7 +790,7 @@ class UserInterface:
 
                                     elif slice["estado"] == "ejecutado":
                                         print(f"* Actualizando el slice {slice['nombre']}")
-                                        slice_actualizado = sa.update_slice(slice)
+                                        slice_actualizado = sa.update_slice(slice,"1")
                                         sa.save_slice(slice_actualizado)
                                         print(slice_actualizado)
                                     print("------------------------")
@@ -802,6 +806,7 @@ class UserInterface:
                 elif option == 3:
                     while True:
                         lista,slice_escogido = o.def_borrar_menu1()
+                        tipo = ""
                         if slice_escogido == "exit":
                             break
                         else:
@@ -811,6 +816,11 @@ class UserInterface:
                                 if slice is not None:
                                     print(f"El slice que borrará es: {slice}")
                                     nombre_slice = slice
+                                    tipoTupla = Conexion().Select("tipo", "slice", f"nombre='{nombre_slice}'")
+                                    if (tipoTupla[0][0] == "linux_custer"):
+                                        tipo = "1"
+                                    if (tipoTupla[0][0] == "openstack"):
+                                        tipo = "2"
                             confirma_borrado = o.def_borrar_menu3(slice_escogido)
                             if confirma_borrado == "exit":
                                 break
@@ -828,7 +838,7 @@ class UserInterface:
                                     json_slice = json.loads(data)
                                     f.close()
                                     sa= SliceAdministrator()
-                                    message = sa.delete_slice(json_slice)
+                                    message = sa.delete_slice(json_slice,tipo)
                                     json_slice["estado"] = "guardado"
                                     sa.save_slice(json_slice)
                                     print(message)
